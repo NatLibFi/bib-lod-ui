@@ -6,7 +6,9 @@ Linked Open Data.
 
 ## Dependencies and installation
 
-Needs Python 3.5+.
+Needs Python 3.5 and the `venv` module. On Debian/Ubuntu:
+
+    apt-get install python3-venv
 
 Clone the repository.
 
