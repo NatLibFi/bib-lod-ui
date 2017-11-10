@@ -27,9 +27,11 @@ class Resource:
         
         query = """
           PREFIX schema: <http://schema.org/>
+          PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
           CONSTRUCT {
             <%s> ?p ?o .
             ?o schema:name ?oname .
+            ?o skos:prefLabel ?olabel .
             ?inst ?instprop ?instval .
             ?instval schema:name ?instvalName .
             ?pubEvent schema:location ?pubPlace .
@@ -39,6 +41,7 @@ class Resource:
           WHERE {
             <%s> ?p ?o .
             OPTIONAL { ?o schema:name ?oname }
+            OPTIONAL { ?o skos:prefLabel ?olabel }
             OPTIONAL {
               <%s> schema:workExample ?inst .
               ?inst ?instprop ?instval .
@@ -68,11 +71,16 @@ class Resource:
         return (len(self.graph) > 0)
 
     def name(self):
-        labels = self.graph.preferredLabel(self.uri, labelProperties=(SCHEMA.name, RDFS.label))
+        props = (SCHEMA.name, SKOS.prefLabel, RDFS.label)
+        labels = self.graph.preferredLabel(self.uri, lang='en', labelProperties=props)
         if len(labels) > 0:
             return labels[0][1]
-        else:
-            return "<%s>" % self.uri
+
+        labels = self.graph.preferredLabel(self.uri, labelProperties=props)
+        if len(labels) > 0:
+            return labels[0][1]
+
+        return "<%s>" % self.uri
     
     def instname(self):
         publisher = Resource(self.graph.value(self.uri, SCHEMA.publisher, None), self.graph).name()
