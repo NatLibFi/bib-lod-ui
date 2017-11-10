@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>{{ res.name() }}</h1>
+  <dl class="dl-horizontal">
+  {% for prop,values in res.properties().items() %}
+    <dt>{{ prop }}</dt>
+    <dd>
+      <ul class="list-unstyled">
+      {% for val in values %}
+        <li>
+        {% if val.url %}
+        <a href="{{ val.url() }}">{{ val }}</a>
+        {% else %}
+        {{ val }}
+        {% endif %}
+        </li>
+      {% endfor %}
+      </ul>
+    </dd>
+  {% endfor %}
+  </dl>
+  
+  {% if res.has_instances() %}
+  <h2>Editions</h2>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4">
+        <ul class="nav nav-pills nav-stacked" role="tablist">
+        {% for inst in res.instances() %}
+          <li role="presentation"><a href="#{{ inst.localname() }}" aria-controls="{{ inst.localname() }}" role="tab" data-toggle="tab">{{ inst.instname() }}</a></li>
+        {% endfor %}
+        </ul>
+      </div>
+      <div class="col-md-8">
+        <div class="tab-content">  
+        {% for inst in res.instances() %}
+          <div role="tabpanel" class="tab-pane" id="{{ inst.localname() }}">
+            <dl class="dl-horizontal">
+            {% for prop,values in inst.properties().items() %}
+              <dt>{{ prop }}</dt>
+              <dd>
+                <ul class="list-unstyled">
+                {% for val in values %}
+                  <li>{{ val }}</li>
+                {% endfor %}
+                </ul>
+              </dd>
+            {% endfor %}
+            </dl>
+          </div>
+        {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+  
+{% endblock %}
