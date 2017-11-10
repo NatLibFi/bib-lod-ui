@@ -21,4 +21,9 @@ Install the dependencies:
 
 ## Running
 
-    ./run.py
+    ./run.py # run in debug mode
+
+or
+
+    ./production.py # run in production mode
+
