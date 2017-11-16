@@ -14,6 +14,17 @@ def value_sort_key(val):
 def instance_sort_key(inst):
     return inst.name()
 
+
+def get_resource(uri):
+    """return a Resource object of the appropriate class for the given URI"""
+    if uri.startswith('http://urn.fi/URN:NBN:fi:bib:me:W'):
+        return Work(uri)
+    if uri.startswith('http://urn.fi/URN:NBN:fi:bib:me:I'):
+        return Instance(uri)
+    # not a recognized URI pattern, just use a plain Resource
+    return Resource(uri)
+    
+
 class Resource:
     prefixes = """
       PREFIX schema: <http://schema.org/>
