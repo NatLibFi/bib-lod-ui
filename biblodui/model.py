@@ -15,14 +15,22 @@ def instance_sort_key(inst):
     return inst.name()
 
 
-def get_resource(uri):
+def get_resource(uri, graph=None):
     """return a Resource object of the appropriate class for the given URI"""
     if uri.startswith('http://urn.fi/URN:NBN:fi:bib:me:W'):
-        return Work(uri)
+        return Work(uri, graph)
     if uri.startswith('http://urn.fi/URN:NBN:fi:bib:me:I'):
-        return Instance(uri)
+        return Instance(uri, graph)
+    if uri.startswith('http://urn.fi/URN:NBN:fi:bib:me:P'):
+        return Person(uri, graph)
+    if uri.startswith('http://urn.fi/URN:NBN:fi:bib:me:O'):
+        return Organization(uri, graph)
+    if uri.startswith('http://urn.fi/URN:NBN:fi:au:pn:'):
+        return Person(uri, graph)
+    if uri.startswith('http://urn.fi/URN:NBN:fi:au:cn:'):
+        return Organization(uri, graph)
     # not a recognized URI pattern, just use a plain Resource
-    return Resource(uri)
+    return Resource(uri, graph)
     
 
 class Resource:
@@ -38,11 +46,19 @@ class Resource:
         <%(uri)s> ?p ?o .
         ?o schema:name ?oname .
         ?o skos:prefLabel ?olabel .
+        ?s2 schema:about <%(uri)s> .
+        ?s2 schema:name ?s2name .
+        ?s2 a ?s2type .
       }
       WHERE {
         <%(uri)s> ?p ?o .
         OPTIONAL { ?o schema:name ?oname }
         OPTIONAL { ?o skos:prefLabel ?olabel }
+        OPTIONAL {
+          ?s2 schema:about <%(uri)s> .
+          ?s2 schema:name ?s2name .
+          ?s2 a ?s2type .
+        }
       }
     """
 
@@ -110,6 +126,15 @@ class Resource:
     
     def has_instances(self):
         return False
+    
+    def has_works_about(self):
+        works_about = self.graph.value(None, SCHEMA.about, self.uri, any=True)
+        return (works_about is not None)
+    
+    def works_about(self):
+        works = [Work(work, self.graph) for work in self.graph.subjects(SCHEMA.about, self.uri)]
+        return works
+        
 
 class Work (Resource):
     query = """
@@ -166,3 +191,10 @@ class Instance (Resource):
         if (self.uri, SCHEMA.bookFormat, SCHEMA.EBook) in self.graph:
             name += ", e-book"
         return name
+
+class Person (Resource):
+    pass
+    
+class Organization (Resource):
+    pass
+    

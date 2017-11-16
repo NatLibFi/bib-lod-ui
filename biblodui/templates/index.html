@@ -20,6 +20,15 @@
   {% endfor %}
   </dl>
   
+  {% if res.has_works_about() %}
+  <h2>Works about</h2>
+  <ul>
+  {% for work in res.works_about() %}
+    <li><a href="{{ work.url() }}">{{ work.name() }}</a></li>
+  {% endfor %}
+  </ul>
+  {% endif %}
+  
   {% if res.has_instances() %}
   <h2>Editions</h2>
   <div class="container">
