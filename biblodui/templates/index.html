@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-  <h1>{{ res.name() }}</h1>
+  <h1>{{ res.typename() }}: {{ res.name() }}</h1>
   <dl class="dl-horizontal">
   {% for prop,values in res.properties().items() %}
     <dt>{{ prop }}</dt>

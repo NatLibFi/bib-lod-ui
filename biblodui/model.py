@@ -65,6 +65,9 @@ class Resource:
     
     def exists(self):
         return (len(self.graph) > 0)
+    
+    def typename(self):
+        return self.__class__.__name__
 
     def name(self):
         props = (SCHEMA.name, SKOS.prefLabel, RDFS.label)
