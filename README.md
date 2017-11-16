@@ -29,3 +29,14 @@ or
 
     ./production.py # run in production mode
 
+# License
+
+The code in this repository is licensed under the Apache license, version
+2.0. See [LICENSE](LICENSE) for details. Exceptions:
+
+The static content under `biblodui/static` consists partly of libraries we
+depend on, such as Bootstrap and jQuery. These have their own licenses (MIT
+License mostly), see the file headers for details.
+
+The logos under `biblodui/static/img` are (c) National Library of Finland
+and require permission to use.

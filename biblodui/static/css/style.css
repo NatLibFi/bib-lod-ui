@@ -1,0 +1,86 @@
+body {
+  font-family: Georgia;
+  color: #666;
+  line-height: 1.5em;
+}
+
+p, li {
+  font-size: 1.1em;
+}
+
+#topbar {
+  background-color: #00224f;
+  margin-bottom: 1em;
+}
+
+#footer {
+  background-color: #00224f;
+  margin-top: 2em;
+  margin-bottom: 0;
+}
+
+#topbar > div > a > img {
+  float: left;
+  margin: 1em;
+  height: 5em;
+}
+
+#footer > div > a > img {
+  float: left;
+  margin: 2em;
+  height: 6em;
+}
+
+#footer p {
+  color: white;
+  margin-top: 2em;
+  font-family: "Open Sans",Helvetica,Arial,sans-serif,Nimbus Sans L;
+  font-weight: bold;
+}
+
+#tagline {
+  font-size: 1.5em;
+}
+
+h1, h2, h3, h4 {
+  color: #424242;
+  font-weight: bold;
+  font-family: "Open Sans",Helvetica,Arial,sans-serif,Nimbus Sans L;
+  text-transform: uppercase;
+  margin-top: 10px;
+}
+
+h3 a, h3 a:hover {
+  color: #424242;
+  text-decoration: none;
+}
+
+h1 {
+  font-size: 3em;
+}
+
+h2 {
+  font-size: 2em;
+}
+
+h3 {
+  font-size: 1.3em;
+}
+
+.row img {
+  width: 100%;
+  max-height: 17em;
+}
+
+#news {
+  height: 22em;
+  text-align: center;
+  padding-top: 10em;
+  background-color: #999;
+}
+
+#news p {
+  color: black;
+  font-size: 2em;
+
+}
