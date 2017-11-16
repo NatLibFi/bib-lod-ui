@@ -12,9 +12,29 @@ def value_sort_key(val):
     return str(val)
 
 def instance_sort_key(inst):
-    return inst.instname()
+    return inst.name()
 
 class Resource:
+    prefixes = """
+      PREFIX schema: <http://schema.org/>
+      PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+    """
+
+    query = """
+      %(prefixes)s
+      
+      CONSTRUCT {
+        <%(uri)s> ?p ?o .
+        ?o schema:name ?oname .
+        ?o skos:prefLabel ?olabel .
+      }
+      WHERE {
+        <%(uri)s> ?p ?o .
+        OPTIONAL { ?o schema:name ?oname }
+        OPTIONAL { ?o skos:prefLabel ?olabel }
+      }
+    """
+
     def __init__(self, uri, graph = None):
         if isinstance(uri, URIRef) or isinstance(uri, BNode):
             self.uri = uri
@@ -23,49 +43,14 @@ class Resource:
 
         if graph is not None:
             self.graph = graph
-            return
-        
-        query = """
-          PREFIX schema: <http://schema.org/>
-          PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-          CONSTRUCT {
-            <%s> ?p ?o .
-            ?o schema:name ?oname .
-            ?o skos:prefLabel ?olabel .
-            ?inst ?instprop ?instval .
-            ?instval schema:name ?instvalName .
-            ?pubEvent schema:location ?pubPlace .
-            ?pubEvent schema:organizer ?org .
-            ?org schema:name ?orgName .
-          }
-          WHERE {
-            <%s> ?p ?o .
-            OPTIONAL { ?o schema:name ?oname }
-            OPTIONAL { ?o skos:prefLabel ?olabel }
-            OPTIONAL {
-              <%s> schema:workExample ?inst .
-              ?inst ?instprop ?instval .
-              OPTIONAL {
-                ?instval schema:name ?instvalName
-              }
-            }
-            OPTIONAL {
-              <%s> schema:publication ?pubEvent .
-              OPTIONAL {
-                ?pubEvent schema:location ?pubPlace .
-              }
-              OPTIONAL {
-                ?pubEvent schema:organizer ?org .
-                ?org schema:name ?orgName .
-              }
-            }
-          }
-        """ % (uri, uri, uri, uri)
-
+        else:
+            self.graph = self.query_for_graph()
+    
+    def query_for_graph(self):
         sparql = SPARQLWrapper("http://data.nationallibrary.fi/bib/sparql")
-        sparql.setQuery(query)
+        sparql.setQuery(self.query % {'uri': self.uri, 'prefixes': self.prefixes})
         graph = sparql.query().convert()
-        self.graph = graph
+        return graph
     
     def exists(self):
         return (len(self.graph) > 0)
@@ -82,14 +67,6 @@ class Resource:
 
         return "<%s>" % self.uri
     
-    def instname(self):
-        publisher = Resource(self.graph.value(self.uri, SCHEMA.publisher, None), self.graph).name()
-        datePublished = self.graph.value(self.uri, SCHEMA.datePublished, None)
-        name = "%s : %s" % (datePublished, publisher)
-        if (self.uri, SCHEMA.bookFormat, SCHEMA.EBook) in self.graph:
-            name += ", e-book"
-        return name
-        
     
     def __str__(self):
         return self.name()
@@ -116,12 +93,62 @@ class Resource:
                     propvals[p].append(o)
             propvals[p].sort(key=value_sort_key)
         return propvals
+    
+    def has_instances(self):
+        return False
+
+class Work (Resource):
+    query = """
+      %(prefixes)s
+      
+      CONSTRUCT {
+        <%(uri)s> ?p ?o .
+        ?o schema:name ?oname .
+        ?o skos:prefLabel ?olabel .
+        ?inst ?instprop ?instval .
+        ?instval schema:name ?instvalName .
+        ?pubEvent schema:location ?pubPlace .
+        ?pubEvent schema:organizer ?org .
+        ?org schema:name ?orgName .
+      }
+      WHERE {
+        <%(uri)s> ?p ?o .
+        OPTIONAL { ?o schema:name ?oname }
+        OPTIONAL { ?o skos:prefLabel ?olabel }
+        OPTIONAL {
+          <%(uri)s> schema:workExample ?inst .
+          ?inst ?instprop ?instval .
+          OPTIONAL {
+            ?instval schema:name ?instvalName
+          }
+        }
+        OPTIONAL {
+          <%(uri)s> schema:publication ?pubEvent .
+          OPTIONAL {
+            ?pubEvent schema:location ?pubPlace .
+          }
+          OPTIONAL {
+            ?pubEvent schema:organizer ?org .
+            ?org schema:name ?orgName .
+          }
+        }
+      }
+    """
 
     def has_instances(self):
         return (self.graph.value(self.uri, SCHEMA.workExample, None, any=True) is not None)
 
     def instances(self):
-        insts = [Resource(inst, self.graph) for inst in self.graph.objects(self.uri, SCHEMA.workExample)]
+        insts = [Instance(inst, self.graph) for inst in self.graph.objects(self.uri, SCHEMA.workExample)]
         insts.sort(key=instance_sort_key)
         return insts
-        
+
+class Instance (Resource):
+
+    def name(self):
+        publisher = Resource(self.graph.value(self.uri, SCHEMA.publisher, None), self.graph).name()
+        datePublished = self.graph.value(self.uri, SCHEMA.datePublished, None)
+        name = "%s : %s" % (datePublished, publisher)
+        if (self.uri, SCHEMA.bookFormat, SCHEMA.EBook) in self.graph:
+            name += ", e-book"
+        return name

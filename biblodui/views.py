@@ -7,13 +7,13 @@ from biblodui import app, model
 @app.route('/')
 @app.route('/index')
 def index():
-    res = model.Resource('http://urn.fi/URN:NBN:fi:bib:me:W00009584100')
+    res = model.Work('http://urn.fi/URN:NBN:fi:bib:me:W00009584100')
     return render_template('index.html', title=res.name(), res=res)
 
 
 @app.route('/bib/me/<resourceid>')
 def bib_resource(resourceid):
-    res = model.Resource('http://urn.fi/URN:NBN:fi:bib:me:%s' % resourceid)
+    res = model.Work('http://urn.fi/URN:NBN:fi:bib:me:%s' % resourceid)
     if not res.exists():
         abort(404)
     return render_template('index.html', title=res.name(), res=res)

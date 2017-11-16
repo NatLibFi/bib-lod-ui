@@ -27,7 +27,7 @@
       <div class="col-md-4">
         <ul class="nav nav-pills nav-stacked" role="tablist">
         {% for inst in res.instances() %}
-          <li role="presentation"><a href="#{{ inst.localname() }}" aria-controls="{{ inst.localname() }}" role="tab" data-toggle="tab">{{ inst.instname() }}</a></li>
+          <li role="presentation"><a href="#{{ inst.localname() }}" aria-controls="{{ inst.localname() }}" role="tab" data-toggle="tab">{{ inst.name() }}</a></li>
         {% endfor %}
         </ul>
       </div>
