@@ -33,6 +33,13 @@ def person_resource(personid):
         abort(404)
     return render_template('resource.html', title=res.name(), res=res)
 
+@app.route('/yso/<conceptid>')
+def concept_resource(conceptid):
+    res = model.get_resource('http://www.yso.fi/onto/yso/%s' % conceptid)
+    if not res.exists():
+        abort(404)
+    return render_template('resource.html', title=res.name(), res=res)
+
 @app.route('/rdf')
 @returns_rdf
 def rdf():

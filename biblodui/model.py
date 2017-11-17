@@ -102,6 +102,7 @@ class Resource:
         url = self.uri
         url = url.replace('http://urn.fi/URN:NBN:fi:bib:me:','/bib/me/')
         url = url.replace('http://urn.fi/URN:NBN:fi:au:pn:','/au/pn/')
+        url = url.replace('http://www.yso.fi/onto/yso/','/yso/')
         return url
     
     def localname(self):
@@ -113,7 +114,7 @@ class Resource:
                      if prop not in (RDF.type, SCHEMA.workExample, SCHEMA.exampleOfWork)])
         for prop in sorted(props, key=lambda prop: str(prop.split('/')[-1]).lower()):
             for obj in self.graph.objects(self.uri, prop):
-                prop = prop.split('/')[-1] # local name
+                prop = prop.split('/')[-1].split('#')[-1] # local name
                 propvals.setdefault(prop, [])
                 if isinstance(obj, (URIRef, BNode)):
                     propvals[prop].append(Resource(obj, self.graph))
