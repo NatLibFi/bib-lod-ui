@@ -138,6 +138,9 @@ class Resource:
 
     def has_contributed_works(self):
         return False
+      
+    def is_agent(self):
+        return False
     
         
 
@@ -259,6 +262,8 @@ class Agent (Resource):
       }
     """
 
+    def is_agent(self):
+        return True
 
     def has_authored_works(self):
         return (self.graph.value(None, SCHEMA.author, self.uri, any=True) is not None)

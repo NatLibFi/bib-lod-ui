@@ -20,31 +20,56 @@
   {% endfor %}
   </dl>
   
-  {% if res.has_works_about() %}
-  <h2>Works about</h2>
+  {% if res.is_agent() %}
+  <div class="container">
+    <div class="row">
+      
+      <div class="col-md-4">
+        <h2>Authored works</h2>
+        {% if res.has_authored_works() %}
+        <ul>
+        {% for work in res.authored_works() %}
+          <li><a href="{{ work.url() }}">{{ work.name() }}</a></li>
+        {% endfor %}
+        </ul>
+        {% endif %}
+
+      </div>
+      
+      <div class="col-md-4">
+        <h2>Contributed works</h2>
+        
+        {% if res.has_contributed_works() %}
+        <ul>
+        {% for work in res.contributed_works() %}
+          <li><a href="{{ work.url() }}">{{ work.name() }}</a></li>
+        {% endfor %}
+        </ul>
+        {% endif %}
+      </div>
+
+      <div class="col-md-4">
+        <h2>Works about {{ res.name() }}</h2>
+  
+        {% if res.has_works_about() %}
+        <ul>
+        {% for work in res.works_about() %}
+          <li><a href="{{ work.url() }}">{{ work.name() }}</a></li>
+        {% endfor %}
+        </ul>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% elif res.has_works_about() %}
+  <h2>Works about {{ res.name() }}</h2>
+
   <ul>
   {% for work in res.works_about() %}
     <li><a href="{{ work.url() }}">{{ work.name() }}</a></li>
   {% endfor %}
   </ul>
-  {% endif %}
   
-  {% if res.has_authored_works() %}
-  <h2>Authored works</h2>
-  <ul>
-  {% for work in res.authored_works() %}
-    <li><a href="{{ work.url() }}">{{ work.name() }}</a></li>
-  {% endfor %}
-  </ul>
-  {% endif %}
-  
-  {% if res.has_contributed_works() %}
-  <h2>Contributed works</h2>
-  <ul>
-  {% for work in res.contributed_works() %}
-    <li><a href="{{ work.url() }}">{{ work.name() }}</a></li>
-  {% endfor %}
-  </ul>
   {% endif %}
   
   {% if res.has_instances() %}
