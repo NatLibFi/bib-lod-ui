@@ -93,7 +93,13 @@
               <dd>
                 <ul class="list-unstyled">
                 {% for val in values %}
-                  <li>{{ val }}</li>
+                  <li>
+                  {% if val.url %}
+                  <a href="{{ val.url() }}">{{ val }}</a>
+                  {% else %}
+                  {{ val }}
+                  {% endif %}
+                  </li>
                 {% endfor %}
                 </ul>
               </dd>

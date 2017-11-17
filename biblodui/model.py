@@ -155,7 +155,8 @@ class Work (Resource):
         ?wab schema:about <%(uri)s> ;
              schema:name ?wabname .
         ?inst ?instprop ?instval .
-        ?instval schema:name ?instvalName .
+        ?instval schema:name ?instvalName ;
+                 skos:prefLabel ?instvalLabel .
         ?pubEvent schema:location ?pubPlace ;
                   schema:organizer ?org .
         ?org schema:name ?orgName .
@@ -179,7 +180,9 @@ class Work (Resource):
           <%(uri)s> schema:workExample ?inst .
           ?inst ?instprop ?instval .
           OPTIONAL {
-            ?instval schema:name ?instvalName
+            { ?instval schema:name ?instvalName }
+            UNION
+            { ?instval skos:prefLabel ?instvalLabel }
           }
         }
         UNION
