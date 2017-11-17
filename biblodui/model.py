@@ -5,16 +5,6 @@ from rdflib.namespace import SKOS
 
 SCHEMA = Namespace('http://schema.org/')
 
-def property_sort_key(prop):
-    return str(prop.split('/')[-1]).lower()
-
-def value_sort_key(val):
-    return str(val)
-
-def instance_sort_key(inst):
-    return inst.name()
-
-
 def get_resource(uri, graph=None):
     """return a Resource object of the appropriate class for the given URI"""
     if uri.startswith('http://urn.fi/URN:NBN:fi:bib:me:W'):
@@ -44,20 +34,24 @@ class Resource:
       
       CONSTRUCT {
         <%(uri)s> ?p ?o .
-        ?o schema:name ?oname .
-        ?o skos:prefLabel ?olabel .
-        ?s2 schema:about <%(uri)s> .
-        ?s2 schema:name ?s2name .
-        ?s2 a ?s2type .
+        ?o schema:name ?oname ;
+           skos:prefLabel ?olabel .
+        ?wab schema:about <%(uri)s> ;
+             schema:name ?wabname .
       }
       WHERE {
-        <%(uri)s> ?p ?o .
-        OPTIONAL { ?o schema:name ?oname }
-        OPTIONAL { ?o skos:prefLabel ?olabel }
-        OPTIONAL {
-          ?s2 schema:about <%(uri)s> .
-          ?s2 schema:name ?s2name .
-          ?s2 a ?s2type .
+        {
+          <%(uri)s> ?p ?o .
+          OPTIONAL {
+            { ?o schema:name ?oname }
+            UNION
+            { ?o skos:prefLabel ?olabel }
+          }
+        }
+        UNION
+        { # works about
+          ?wab schema:about <%(uri)s> .
+          ?wab schema:name ?wabname .
         }
       }
     """
@@ -100,6 +94,9 @@ class Resource:
     
     def __str__(self):
         return self.name()
+      
+    def sort_key(self):
+        return self.name().lower()
     
     def url(self):
         url = self.uri
@@ -113,7 +110,7 @@ class Resource:
     def properties(self):
         propvals = OrderedDict() # key: property URIRef, value: list of values
         props = set([p for p in self.graph.predicates(self.uri, None) if p not in (RDF.type, SCHEMA.workExample, SCHEMA.exampleOfWork)])
-        for p in sorted(props, key=property_sort_key):
+        for p in sorted(props, key=lambda prop:str(prop.split('/')[-1]).lower()):
             for o in self.graph.objects(self.uri, p):
                 p = p.split('/')[-1] # local name
                 propvals.setdefault(p, [])
@@ -121,19 +118,26 @@ class Resource:
                     propvals[p].append(Resource(o, self.graph))
                 else:
                     propvals[p].append(o)
-            propvals[p].sort(key=value_sort_key)
+            propvals[p].sort(key=lambda val:str(val).lower())
         return propvals
     
     def has_instances(self):
         return False
     
     def has_works_about(self):
-        works_about = self.graph.value(None, SCHEMA.about, self.uri, any=True)
-        return (works_about is not None)
+        return (self.graph.value(None, SCHEMA.about, self.uri, any=True) is not None)
     
     def works_about(self):
         works = [Work(work, self.graph) for work in self.graph.subjects(SCHEMA.about, self.uri)]
+        works.sort(key=lambda w:w.sort_key())
         return works
+
+    def has_authored_works(self):
+        return False
+
+    def has_contributed_works(self):
+        return False
+    
         
 
 class Work (Resource):
@@ -142,26 +146,40 @@ class Work (Resource):
       
       CONSTRUCT {
         <%(uri)s> ?p ?o .
-        ?o schema:name ?oname .
-        ?o skos:prefLabel ?olabel .
+        ?o schema:name ?oname ;
+           skos:prefLabel ?olabel .
+        ?wab schema:about <%(uri)s> ;
+             schema:name ?wabname .
         ?inst ?instprop ?instval .
         ?instval schema:name ?instvalName .
-        ?pubEvent schema:location ?pubPlace .
-        ?pubEvent schema:organizer ?org .
+        ?pubEvent schema:location ?pubPlace ;
+                  schema:organizer ?org .
         ?org schema:name ?orgName .
       }
       WHERE {
-        <%(uri)s> ?p ?o .
-        OPTIONAL { ?o schema:name ?oname }
-        OPTIONAL { ?o skos:prefLabel ?olabel }
-        OPTIONAL {
+        {
+          <%(uri)s> ?p ?o .
+          OPTIONAL {
+            { ?o schema:name ?oname }
+            UNION
+            { ?o skos:prefLabel ?olabel }
+          }
+        }
+        UNION
+        { # works about
+          ?wab schema:about <%(uri)s> ;
+               schema:name ?wabname .
+        }
+        UNION
+        { # instances
           <%(uri)s> schema:workExample ?inst .
           ?inst ?instprop ?instval .
           OPTIONAL {
             ?instval schema:name ?instvalName
           }
         }
-        OPTIONAL {
+        UNION
+        { # publication events
           <%(uri)s> schema:publication ?pubEvent .
           OPTIONAL {
             ?pubEvent schema:location ?pubPlace .
@@ -179,22 +197,87 @@ class Work (Resource):
 
     def instances(self):
         insts = [Instance(inst, self.graph) for inst in self.graph.objects(self.uri, SCHEMA.workExample)]
-        insts.sort(key=instance_sort_key)
+        insts.sort(key=lambda inst:inst.sort_key())
         return insts
 
 class Instance (Resource):
 
     def name(self):
-        publisher = Resource(self.graph.value(self.uri, SCHEMA.publisher, None), self.graph).name()
         datePublished = self.graph.value(self.uri, SCHEMA.datePublished, None)
-        name = "%s : %s" % (datePublished, publisher)
+        if datePublished is None:
+          datePublished = "-"
+        publisher_uri = self.graph.value(self.uri, SCHEMA.publisher, None)
+        if publisher_uri is not None:
+          publisher_name = Resource(publisher_uri, self.graph).name()
+          name = "%s : %s" % (datePublished, publisher_name)
+        else:
+          name = datePublished
         if (self.uri, SCHEMA.bookFormat, SCHEMA.EBook) in self.graph:
             name += ", e-book"
         return name
 
-class Person (Resource):
-    pass
+class Agent (Resource):
+    query = """
+      %(prefixes)s
+      
+      CONSTRUCT {
+        <%(uri)s> ?p ?o .
+        ?o schema:name ?oname ;
+           skos:prefLabel ?olabel .
+        ?wab schema:about <%(uri)s> ;
+             schema:name ?wabname .
+        ?wau schema:author <%(uri)s> ;
+             schema:name ?wauname .
+        ?wco schema:contributor <%(uri)s> ;
+             schema:name ?wconame .
+      }
+      WHERE {
+        {
+          <%(uri)s> ?p ?o .
+          OPTIONAL {
+            { ?o schema:name ?oname }
+            UNION
+            { ?o skos:prefLabel ?olabel }
+          }
+        }
+        UNION
+        { # works about
+          ?wab schema:about <%(uri)s> ;
+               schema:name ?wabname .
+        }
+        UNION
+        { # authored works
+          ?wau schema:author <%(uri)s> ;
+               schema:name ?wauname .
+        }
+        UNION
+        { # contributed works
+          ?wco schema:contributor <%(uri)s> ;
+               schema:name ?wconame .
+        }
+      }
+    """
+
+
+    def has_authored_works(self):
+        return (self.graph.value(None, SCHEMA.author, self.uri, any=True) is not None)
     
-class Organization (Resource):
+    def authored_works(self):
+        works = [Work(work, self.graph) for work in self.graph.subjects(SCHEMA.author, self.uri)]
+        works.sort(key=lambda work:work.sort_key())
+        return works
+
+    def has_contributed_works(self):
+        return (self.graph.value(None, SCHEMA.contributor, self.uri, any=True) is not None)
+    
+    def contributed_works(self):
+        works = [Work(work, self.graph) for work in self.graph.subjects(SCHEMA.contributor, self.uri)]
+        works.sort(key=lambda work:work.sort_key())
+        return works
+
+class Person (Agent):
+    pass
+
+class Organization (Agent):
     pass
     

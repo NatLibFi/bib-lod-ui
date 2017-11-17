@@ -29,6 +29,24 @@
   </ul>
   {% endif %}
   
+  {% if res.has_authored_works() %}
+  <h2>Authored works</h2>
+  <ul>
+  {% for work in res.authored_works() %}
+    <li><a href="{{ work.url() }}">{{ work.name() }}</a></li>
+  {% endfor %}
+  </ul>
+  {% endif %}
+  
+  {% if res.has_contributed_works() %}
+  <h2>Contributed works</h2>
+  <ul>
+  {% for work in res.contributed_works() %}
+    <li><a href="{{ work.url() }}">{{ work.name() }}</a></li>
+  {% endfor %}
+  </ul>
+  {% endif %}
+  
   {% if res.has_instances() %}
   <h2>Editions</h2>
   <div class="container">
