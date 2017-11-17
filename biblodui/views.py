@@ -8,7 +8,7 @@ from biblodui import app, model
 @app.route('/index')
 def index():
     res = model.get_resource('http://urn.fi/URN:NBN:fi:bib:me:W00009584100')
-    return render_template('index.html', title=res.name(), res=res)
+    return render_template('resource.html', title=res.name(), res=res)
 
 
 @app.route('/bib/me/<resourceid>')
@@ -16,14 +16,14 @@ def bib_resource(resourceid):
     res = model.get_resource('http://urn.fi/URN:NBN:fi:bib:me:%s' % resourceid)
     if not res.exists():
         abort(404)
-    return render_template('index.html', title=res.name(), res=res)
+    return render_template('resource.html', title=res.name(), res=res)
 
 @app.route('/au/pn/<personid>')
 def person_resource(personid):
     res = model.get_resource('http://urn.fi/URN:NBN:fi:au:pn:%s' % personid)
     if not res.exists():
         abort(404)
-    return render_template('index.html', title=res.name(), res=res)
+    return render_template('resource.html', title=res.name(), res=res)
 
 @app.route('/rdf')
 @returns_rdf
