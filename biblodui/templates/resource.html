@@ -77,7 +77,7 @@
   <div class="container">
     <div class="row">
       <div class="col-md-4">
-        <ul class="nav nav-pills nav-stacked" role="tablist">
+        <ul class="nav nav-pills nav-stacked" role="tablist" id="instances">
         {% for inst in res.instances() %}
           <li role="presentation"><a href="#{{ inst.localname() }}" aria-controls="{{ inst.localname() }}" role="tab" data-toggle="tab">{{ inst.name() }}</a></li>
         {% endfor %}

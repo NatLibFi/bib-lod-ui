@@ -219,6 +219,11 @@ class Instance (Resource):
         if (self.uri, SCHEMA.bookFormat, SCHEMA.EBook) in self.graph:
             name += ", e-book"
         return name
+    
+    def get_work(self):
+        work_uri = self.graph.value(self.uri, SCHEMA.exampleOfWork, None, any=True)
+        return Work(work_uri, self.graph)
+        
 
 class Agent (Resource):
     query = """
