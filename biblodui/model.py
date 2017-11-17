@@ -109,16 +109,17 @@ class Resource:
     
     def properties(self):
         propvals = OrderedDict() # key: property URIRef, value: list of values
-        props = set([p for p in self.graph.predicates(self.uri, None) if p not in (RDF.type, SCHEMA.workExample, SCHEMA.exampleOfWork)])
-        for p in sorted(props, key=lambda prop:str(prop.split('/')[-1]).lower()):
-            for o in self.graph.objects(self.uri, p):
-                p = p.split('/')[-1] # local name
-                propvals.setdefault(p, [])
-                if isinstance(o, URIRef) or isinstance(o, BNode):
-                    propvals[p].append(Resource(o, self.graph))
+        props = set([prop for prop in self.graph.predicates(self.uri, None)
+                     if prop not in (RDF.type, SCHEMA.workExample, SCHEMA.exampleOfWork)])
+        for prop in sorted(props, key=lambda prop: str(prop.split('/')[-1]).lower()):
+            for obj in self.graph.objects(self.uri, prop):
+                prop = prop.split('/')[-1] # local name
+                propvals.setdefault(prop, [])
+                if isinstance(obj, (URIRef, BNode)):
+                    propvals[prop].append(Resource(obj, self.graph))
                 else:
-                    propvals[p].append(o)
-            propvals[p].sort(key=lambda val:str(val).lower())
+                    propvals[prop].append(obj)
+            propvals[prop].sort(key=lambda val: str(val).lower())
         return propvals
     
     def has_instances(self):
@@ -129,7 +130,7 @@ class Resource:
     
     def works_about(self):
         works = [Work(work, self.graph) for work in self.graph.subjects(SCHEMA.about, self.uri)]
-        works.sort(key=lambda w:w.sort_key())
+        works.sort(key=lambda w: w.sort_key())
         return works
 
     def has_authored_works(self):
@@ -197,7 +198,7 @@ class Work (Resource):
 
     def instances(self):
         insts = [Instance(inst, self.graph) for inst in self.graph.objects(self.uri, SCHEMA.workExample)]
-        insts.sort(key=lambda inst:inst.sort_key())
+        insts.sort(key=lambda inst: inst.sort_key())
         return insts
 
 class Instance (Resource):
@@ -264,7 +265,7 @@ class Agent (Resource):
     
     def authored_works(self):
         works = [Work(work, self.graph) for work in self.graph.subjects(SCHEMA.author, self.uri)]
-        works.sort(key=lambda work:work.sort_key())
+        works.sort(key=lambda work: work.sort_key())
         return works
 
     def has_contributed_works(self):
@@ -272,7 +273,7 @@ class Agent (Resource):
     
     def contributed_works(self):
         works = [Work(work, self.graph) for work in self.graph.subjects(SCHEMA.contributor, self.uri)]
-        works.sort(key=lambda work:work.sort_key())
+        works.sort(key=lambda work: work.sort_key())
         return works
 
 class Person (Agent):
