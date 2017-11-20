@@ -79,7 +79,7 @@
       <div class="col-md-4">
         <ul class="nav nav-pills nav-stacked" role="tablist" id="instances">
         {% for inst in res.instances() %}
-          <li role="presentation"><a href="#{{ inst.localname() }}" aria-controls="{{ inst.localname() }}" role="tab" data-toggle="tab">{{ inst.name() }}</a></li>
+          <li role="presentation"><a href="#{{ inst.localname() }}" aria-controls="{{ inst.localname() }}" role="tab" data-toggle="tab">{{ inst.edition_info() }}</a></li>
         {% endfor %}
         </ul>
       </div>
@@ -87,6 +87,10 @@
         <div class="tab-content">  
         {% for inst in res.instances() %}
           <div role="tabpanel" class="tab-pane" id="{{ inst.localname() }}">
+            {% if inst.finna_url() %}
+            <div class="finna-link"><a href="{{ inst.finna_url() }}">View this in Finna</a></div>
+            {% endif %}
+            <h3>Instance: {{ inst.name() }}</h3>
             <dl class="dl-horizontal">
             {% for prop,values in inst.properties().items() %}
               <dt>{{ prop }}</dt>

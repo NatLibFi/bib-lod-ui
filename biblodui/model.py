@@ -232,7 +232,7 @@ class Work (Resource):
 
 class Instance (Resource):
 
-    def name(self):
+    def edition_info(self):
         datePublished = self.graph.value(self.uri, SCHEMA.datePublished, None)
         if datePublished is None:
           datePublished = "-"
@@ -245,6 +245,15 @@ class Instance (Resource):
         if (self.uri, SCHEMA.bookFormat, SCHEMA.EBook) in self.graph:
             name += ", e-book"
         return name
+    
+    def finna_url(self):
+        for ident in self.graph.objects(self.uri, SCHEMA.identifier):
+            propertyID = self.graph.value(ident, SCHEMA.propertyID, None)
+            if str(propertyID) == 'FI-FENNI':
+                finna_id = self.graph.value(ident, SCHEMA.value, None)
+                if finna_id is not None:
+                    return "https://finna.fi/Record/fennica.%s" % finna_id
+        return None
     
     def get_work(self):
         work_uri = self.graph.value(self.uri, SCHEMA.exampleOfWork, None, any=True)
