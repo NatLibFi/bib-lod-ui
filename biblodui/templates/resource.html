@@ -94,11 +94,18 @@
                 <ul class="list-unstyled">
                 {% for val in values %}
                   <li>
-                  {% if val.url %}
-                  <a href="{{ val.url() }}">{{ val }}</a>
-                  {% else %}
-                  {{ val }}
-                  {% endif %}
+                    {% if val.items %}
+                    {% for p, vals in val.items() %}
+                      <strong>{{ p }}:</strong>
+                      {% for v in vals %}
+                      {{ v }}
+                      {% endfor %}
+                    {% endfor %}
+                    {% elif val.url and val.url() %}
+                    <a href="{{ val.url() }}">{{ val }}</a>
+                    {% else %}
+                    {{ val }}
+                    {% endif %}
                   </li>
                 {% endfor %}
                 </ul>

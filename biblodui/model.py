@@ -88,7 +88,7 @@ class Resource:
         labels = self.graph.preferredLabel(self.uri, labelProperties=props)
         if len(labels) > 0:
             return labels[0][1]
-
+        
         return "<%s>" % self.uri
     
     
@@ -99,6 +99,8 @@ class Resource:
         return self.name().lower()
     
     def url(self):
+        if isinstance(self.uri, BNode):
+            return None
         url = self.uri
         url = url.replace('http://urn.fi/URN:NBN:fi:bib:me:','/bib/me/')
         url = url.replace('http://urn.fi/URN:NBN:fi:au:pn:','/au/pn/')
@@ -108,19 +110,27 @@ class Resource:
     def localname(self):
         return self.uri.split(':')[-1]
     
-    def properties(self):
+    def property_name(self, prop):
+        return prop.split('/')[-1].split('#')[-1] # local name
+    
+    def properties(self, uri=None):
+        if uri is None:
+            uri = self.uri
         propvals = OrderedDict() # key: property URIRef, value: list of values
-        props = set([prop for prop in self.graph.predicates(self.uri, None)
+        props = set([prop for prop in self.graph.predicates(uri, None)
                      if prop not in (RDF.type, SCHEMA.workExample, SCHEMA.exampleOfWork)])
-        for prop in sorted(props, key=lambda prop: str(prop.split('/')[-1]).lower()):
-            for obj in self.graph.objects(self.uri, prop):
-                prop = prop.split('/')[-1].split('#')[-1] # local name
-                propvals.setdefault(prop, [])
-                if isinstance(obj, (URIRef, BNode)):
-                    propvals[prop].append(Resource(obj, self.graph))
+        for prop in sorted(props, key=lambda prop: self.property_name(prop).lower()):
+            propname = self.property_name(prop)
+            propvals[propname] = []
+            for obj in self.graph.objects(uri, prop):
+                if isinstance(obj, URIRef) or self.graph.value(obj, SCHEMA.name, None, any=True) is not None:
+                    val = Resource(obj, self.graph)
+                elif isinstance(obj, BNode):
+                    val = self.properties(obj)
                 else:
-                    propvals[prop].append(obj)
-            propvals[prop].sort(key=lambda val: str(val).lower())
+                    val = obj
+                propvals[propname].append(val)
+            propvals[propname].sort(key=lambda val: str(val).lower())
         return propvals
     
     def has_instances(self):
@@ -158,8 +168,10 @@ class Work (Resource):
         ?inst ?instprop ?instval .
         ?instval schema:name ?instvalName ;
                  skos:prefLabel ?instvalLabel .
+        ?id ?idprop ?idval .
         ?pubEvent schema:location ?pubPlace ;
                   schema:organizer ?org .
+        ?pubPlace schema:name ?pubPlaceName .
         ?org schema:name ?orgName .
       }
       WHERE {
@@ -178,23 +190,33 @@ class Work (Resource):
         }
         UNION
         { # instances
-          <%(uri)s> schema:workExample ?inst .
-          ?inst ?instprop ?instval .
+          { <%(uri)s> schema:workExample ?inst }
           OPTIONAL {
-            { ?instval schema:name ?instvalName }
+            {
+              ?inst ?instprop ?instval .
+              OPTIONAL {
+                { ?instval schema:name ?instvalName }
+                UNION
+                { ?instval skos:prefLabel ?instvalLabel }
+              }
+            }
             UNION
-            { ?instval skos:prefLabel ?instvalLabel }
-          }
-        }
-        UNION
-        { # publication events
-          <%(uri)s> schema:publication ?pubEvent .
-          OPTIONAL {
-            ?pubEvent schema:location ?pubPlace .
-          }
-          OPTIONAL {
-            ?pubEvent schema:organizer ?org .
-            ?org schema:name ?orgName .
+            { # identifiers
+              ?inst schema:identifier ?id .
+              ?id ?idprop ?idval .
+            }
+            UNION
+            { # publication events
+              ?inst schema:publication ?pubEvent .
+              OPTIONAL {
+                ?pubEvent schema:location ?pubPlace .
+                ?pubPlace schema:name ?pubPlaceName .
+              }
+              OPTIONAL {
+                ?pubEvent schema:organizer ?org .
+                ?org schema:name ?orgName .
+              }
+            }
           }
         }
       }
