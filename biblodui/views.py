@@ -1,4 +1,4 @@
-from flask import render_template, abort, redirect, request
+from flask import render_template, abort, redirect, request, make_response
 from flask_rdf import wants_rdf
 from flask_rdf.flask import returns_rdf
 
@@ -15,7 +15,6 @@ def index():
     else:
         return render_template('resource.html', title=res.name(), res=res)
 
-
 @app.route('/bib/me/<resourceid>')
 @returns_rdf
 def bib_resource(resourceid):
@@ -25,7 +24,9 @@ def bib_resource(resourceid):
     if wants_rdf(request.headers.get('Accept', '')):
         return res.graph
     else:
-        return render_template('resource.html', title=res.name(), res=res)
+        response = make_response(render_template('resource.html', title=res.name(), res=res))
+        response.headers['Vary'] = 'Accept'
+        return response
 
 @app.route('/bib/me/I<instanceid>')
 @returns_rdf
@@ -45,7 +46,9 @@ def person_resource(personid):
     if wants_rdf(request.headers.get('Accept', '')):
         return res.graph
     else:
-        return render_template('resource.html', title=res.name(), res=res)
+        response = make_response(render_template('resource.html', title=res.name(), res=res))
+        response.headers['Vary'] = 'Accept'
+        return response
 
 @app.route('/yso/<conceptid>')
 @returns_rdf
@@ -56,5 +59,7 @@ def concept_resource(conceptid):
     if wants_rdf(request.headers.get('Accept', '')):
         return res.graph
     else:
-        return render_template('resource.html', title=res.name(), res=res)
+        response = make_response(render_template('resource.html', title=res.name(), res=res))
+        response.headers['Vary'] = 'Accept'
+        return response
 
