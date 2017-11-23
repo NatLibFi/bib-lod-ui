@@ -1,3 +1,4 @@
 Flask==0.12
 flask_rdf
 SPARQLWrapper
+rdflib-jsonld
