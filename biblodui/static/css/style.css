@@ -84,6 +84,15 @@ h3 {
 
 }
 
+div.uri {
+  margin:0 0 1em 0;
+}
+
+span.uri {
+  font-family: monospace;
+  margin-left: 1em;
+}
+
 .finna-link {
   float: right;
   font-size: 1.2em;
