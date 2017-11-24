@@ -237,7 +237,7 @@ class Work (Resource):
 class Instance (Resource):
 
     def edition_info(self):
-        date_published = self.graph.value(self.uri, SCHEMA.date_published, None)
+        date_published = self.graph.value(self.uri, SCHEMA.datePublished, None)
         if date_published is None:
           date_published = "-"
         publisher_uri = self.graph.value(self.uri, SCHEMA.publisher, None)
