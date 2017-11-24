@@ -256,6 +256,9 @@ class Instance (Resource):
             name += ", e-book"
         return name
     
+    def sort_key(self):
+        return self.edition_info().lower()
+
     def finna_url(self):
         for ident in self.graph.objects(self.uri, SCHEMA.identifier):
             property_id = self.graph.value(ident, SCHEMA.propertyID, None)
