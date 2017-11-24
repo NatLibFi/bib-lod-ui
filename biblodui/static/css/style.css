@@ -13,9 +13,18 @@ p, li {
   margin-bottom: 1em;
 }
 
+.logo, .search {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.logo img {
+  width: 5em;
+  height: 5em;
+}
+
 .search {
-  float: right;
-  margin-top: 2em;
+  font-family: "Open Sans",Helvetica,Arial,sans-serif,Nimbus Sans L;
 }
 
 .search label {
@@ -30,6 +39,7 @@ p, li {
   background-color: #00224f;
   margin-top: 2em;
   margin-bottom: 0;
+  padding: 1em;
 }
 
 #topbar > div > a > img {
@@ -40,13 +50,13 @@ p, li {
 
 #footer > div > a > img {
   float: left;
-  margin: 2em;
+  margin: 1em;
   height: 6em;
 }
 
-#footer p {
+#footer p, #topbar p {
   color: white;
-  margin-top: 2em;
+  margin-top: 1em;
   font-family: "Open Sans",Helvetica,Arial,sans-serif,Nimbus Sans L;
   font-weight: bold;
 }
@@ -75,14 +85,19 @@ h2 {
   font-size: 2em;
 }
 
+h2.instances {
+  border-bottom: 1px solid black;
+}
+
 h3 {
   font-size: 1.3em;
 }
 
+/*
 .row img {
   width: 100%;
   max-height: 17em;
-}
+}*/
 
 #news {
   height: 22em;
@@ -130,7 +145,7 @@ h3 {
   padding: 0 0 0 1.2em;
   background-image: url("/static/img/iconmonstr-book-17.svg");
   background-size: 1em 1em;
-  background-position: left center;
+  background-position: left top;
   background-repeat: no-repeat;
 }
 
@@ -138,7 +153,7 @@ h3 {
   padding: 0 0 0 1.2em;
   background-image: url("/static/img/iconmonstr-user-2.svg");
   background-size: 1em 1em;
-  background-position: left center;
+  background-position: left top;
   background-repeat: no-repeat;
 }
 
@@ -146,7 +161,7 @@ h3 {
   padding: 0 0 0 1.2em;
   background-image: url("/static/img/iconmonstr-tag-11.svg");
   background-size: 1em 1em;
-  background-position: left center;
+  background-position: left top;
   background-repeat: no-repeat;
 }
 
