@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
+
+<div class="row">
+  <div class="col-md-12">
   <h1 class="type-{{ res.typename().lower() }}">{{ res.name() }}</h1>
   <div class="uri">URI: <a href="{{ res.uri }}">{{ res.uri }}</a></div>
   
@@ -21,12 +24,12 @@
     </dd>
   {% endfor %}
   </dl>
+  </div>
+</div>
   
   {% if res.is_agent() %}
-  <div class="container">
-    <div class="row">
-      
-      <div class="col-md-4">
+<div class="row">
+  <div class="col-md-4">
         <h2>Authored works</h2>
         {% if res.has_authored_works() %}
         <ul>
@@ -36,9 +39,9 @@
         </ul>
         {% endif %}
 
-      </div>
+  </div>
       
-      <div class="col-md-4">
+  <div class="col-md-4">
         <h2>Contributed works</h2>
         
         {% if res.has_contributed_works() %}
@@ -48,9 +51,9 @@
         {% endfor %}
         </ul>
         {% endif %}
-      </div>
+  </div>
 
-      <div class="col-md-4">
+  <div class="col-md-4">
         <h2>Works about {{ res.name() }}</h2>
   
         {% if res.has_works_about() %}
@@ -60,10 +63,12 @@
         {% endfor %}
         </ul>
         {% endif %}
-      </div>
-    </div>
   </div>
+</div>
+
   {% elif res.has_works_about() %}
+<div class="row">
+  <div class="col-md-12">
   <h2>Works about {{ res.name() }}</h2>
 
   <ul>
@@ -71,21 +76,26 @@
     <li><a href="{{ work.url() }}">{{ work.name() }}</a></li>
   {% endfor %}
   </ul>
+  </div>
+</div>
   
   {% endif %}
   
   {% if res.has_instances() %}
-  <h2>Instances</h2>
-  <div class="container">
-    <div class="row">
-      <div class="col-md-4">
+<div class="row">
+  <div class="col-md-12">
+        <h2>Instances</h2>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-4">
         <ul class="nav nav-pills nav-stacked" role="tablist" id="instances">
         {% for inst in res.instances() %}
           <li role="presentation"><a href="#{{ inst.localname() }}" aria-controls="{{ inst.localname() }}" role="tab" data-toggle="tab">{{ inst.edition_info() }}</a></li>
         {% endfor %}
         </ul>
-      </div>
-      <div class="col-md-8">
+  </div>
+  <div class="col-md-8">
         <div class="tab-content">  
         {% for inst in res.instances() %}
           <div role="tabpanel" class="tab-pane" id="{{ inst.localname() }}">
@@ -122,20 +132,23 @@
           </div>
         {% endfor %}
         </div>
-      </div>
-    </div>
   </div>
+</div>
   {% endif %}
   
-  <div class="download">
-    Download this resource as RDF:
-    <ul class="list-inline">
-    <li><a href="{{ res.localname() }}.ttl">Turtle</a></li>
-    <li><a href="{{ res.localname() }}.rdf">RDF/XML</a></li>
-    <li><a href="{{ res.localname() }}.nt">N-Triples</a></li>
-    <li><a href="{{ res.localname() }}.json">JSON-LD</a></li>
-    </ul>
-  
+<div class="row">
+  <div class="col-md-12">
+        <div class="download">
+          <p>Download this resource as RDF:</p>
+          <ul class="list-inline">
+          <li><a href="{{ res.localname() }}.ttl">Turtle</a></li>
+          <li><a href="{{ res.localname() }}.rdf">RDF/XML</a></li>
+          <li><a href="{{ res.localname() }}.nt">N-Triples</a></li>
+          <li><a href="{{ res.localname() }}.json">JSON-LD</a></li>
+          </ul>
+        
+        </div>
   </div>
+</div>
   
 {% endblock %}

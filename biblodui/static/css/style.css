@@ -98,7 +98,7 @@ h3 {
 }
 
 .uri {
-  margin:0 0 1em 0;
+  margin:0 0 1em 3.5em;
 }
 
 .uri a {
@@ -148,6 +148,15 @@ h3 {
   background-size: 1em 1em;
   background-position: left center;
   background-repeat: no-repeat;
+}
+
+.download {
+  margin-top: 3em;
+}
+
+.download p {
+  float: left;
+  margin-right: 1em;
 }
 
 .autocomplete-suggestions { border: 1px solid #999; background: #FFF; overflow: auto; }
