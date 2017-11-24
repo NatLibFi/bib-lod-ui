@@ -237,23 +237,23 @@ class Work (Resource):
 class Instance (Resource):
 
     def edition_info(self):
-        datePublished = self.graph.value(self.uri, SCHEMA.datePublished, None)
-        if datePublished is None:
-          datePublished = "-"
+        date_published = self.graph.value(self.uri, SCHEMA.date_published, None)
+        if date_published is None:
+          date_published = "-"
         publisher_uri = self.graph.value(self.uri, SCHEMA.publisher, None)
         if publisher_uri is not None:
           publisher_name = Resource(publisher_uri, self.graph).name()
-          name = "%s : %s" % (datePublished, publisher_name)
+          name = "%s : %s" % (date_published, publisher_name)
         else:
-          name = datePublished
+          name = date_published
         if (self.uri, SCHEMA.bookFormat, SCHEMA.EBook) in self.graph:
             name += ", e-book"
         return name
     
     def finna_url(self):
         for ident in self.graph.objects(self.uri, SCHEMA.identifier):
-            propertyID = self.graph.value(ident, SCHEMA.propertyID, None)
-            if str(propertyID) == 'FI-FENNI':
+            property_id = self.graph.value(ident, SCHEMA.propertyID, None)
+            if str(property_id) == 'FI-FENNI':
                 finna_id = self.graph.value(ident, SCHEMA.value, None)
                 if finna_id is not None:
                     return "https://finna.fi/Record/fennica.%s" % finna_id
