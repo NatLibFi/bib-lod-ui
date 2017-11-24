@@ -127,4 +127,15 @@
   </div>
   {% endif %}
   
+  <div class="download">
+    Download this resource as RDF:
+    <ul class="list-inline">
+    <li><a href="{{ res.localname() }}.ttl">Turtle</a></li>
+    <li><a href="{{ res.localname() }}.rdf">RDF/XML</a></li>
+    <li><a href="{{ res.localname() }}.nt">N-Triples</a></li>
+    <li><a href="{{ res.localname() }}.json">JSON-LD</a></li>
+    </ul>
+  
+  </div>
+  
 {% endblock %}
