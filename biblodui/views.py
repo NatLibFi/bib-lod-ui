@@ -42,8 +42,7 @@ def index():
     res = model.get_resource('http://urn.fi/URN:NBN:fi:bib:me:W00009584100')
     if wants_rdf(request.headers.get('Accept', '')):
         return res.graph
-    else:
-        return render_template('resource.html', title=res.name(), res=res)
+    return render_template('resource.html', title=res.name(), res=res)
 
 @app.route('/bib/me/<string(length=12):resourceid>')
 @returns_rdf
@@ -53,10 +52,9 @@ def bib_resource(resourceid):
         abort(404)
     if wants_rdf(request.headers.get('Accept', '')):
         return res.graph
-    else:
-        response = make_response(render_template('resource.html', title=res.name(), res=res))
-        response.headers['Vary'] = 'Accept'
-        return response
+    response = make_response(render_template('resource.html', title=res.name(), res=res))
+    response.headers['Vary'] = 'Accept'
+    return response
 
 @app.route('/bib/me/<resourceid>.<fmt>')
 def bib_resource_format(resourceid, fmt):
@@ -82,10 +80,9 @@ def person_resource(personid):
         abort(404)
     if wants_rdf(request.headers.get('Accept', '')):
         return res.graph
-    else:
-        response = make_response(render_template('resource.html', title=res.name(), res=res))
-        response.headers['Vary'] = 'Accept'
-        return response
+    response = make_response(render_template('resource.html', title=res.name(), res=res))
+    response.headers['Vary'] = 'Accept'
+    return response
 
 @app.route('/au/pn/<regex("[0-9]+"):personid>.<fmt>')
 def person_resource_format(personid, fmt):
@@ -103,10 +100,9 @@ def concept_resource(conceptid):
         abort(404)
     if wants_rdf(request.headers.get('Accept', '')):
         return res.graph
-    else:
-        response = make_response(render_template('resource.html', title=res.name(), res=res))
-        response.headers['Vary'] = 'Accept'
-        return response
+    response = make_response(render_template('resource.html', title=res.name(), res=res))
+    response.headers['Vary'] = 'Accept'
+    return response
 
 @app.route('/yso/<regex("p[0-9]+"):conceptid>.<fmt>')
 def concept_resource_format(conceptid, fmt):
