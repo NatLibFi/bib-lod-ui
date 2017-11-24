@@ -78,7 +78,7 @@ class Resource:
         return graph
     
     def exists(self):
-        return (len(self.graph) > 0)
+        return len(self.graph) > 0
     
     def typename(self):
         return self.__class__.__name__
@@ -141,7 +141,7 @@ class Resource:
         return False
     
     def has_works_about(self):
-        return (self.graph.value(None, SCHEMA.about, self.uri, any=True) is not None)
+        return self.graph.value(None, SCHEMA.about, self.uri, any=True) is not None
     
     def works_about(self):
         works = [Work(work, self.graph) for work in self.graph.subjects(SCHEMA.about, self.uri)]
@@ -227,7 +227,7 @@ class Work (Resource):
     """
 
     def has_instances(self):
-        return (self.graph.value(self.uri, SCHEMA.workExample, None, any=True) is not None)
+        return self.graph.value(self.uri, SCHEMA.workExample, None, any=True) is not None
 
     def instances(self):
         insts = [Instance(inst, self.graph) for inst in self.graph.objects(self.uri, SCHEMA.workExample)]
@@ -310,7 +310,7 @@ class Agent (Resource):
         return True
 
     def has_authored_works(self):
-        return (self.graph.value(None, SCHEMA.author, self.uri, any=True) is not None)
+        return self.graph.value(None, SCHEMA.author, self.uri, any=True) is not None
     
     def authored_works(self):
         works = [Work(work, self.graph) for work in self.graph.subjects(SCHEMA.author, self.uri)]
@@ -318,7 +318,7 @@ class Agent (Resource):
         return works
 
     def has_contributed_works(self):
-        return (self.graph.value(None, SCHEMA.contributor, self.uri, any=True) is not None)
+        return self.graph.value(None, SCHEMA.contributor, self.uri, any=True) is not None
     
     def contributed_works(self):
         works = [Work(work, self.graph) for work in self.graph.subjects(SCHEMA.contributor, self.uri)]
