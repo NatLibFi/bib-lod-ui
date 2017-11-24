@@ -32,6 +32,7 @@ def uri_to_url(uri):
     url = uri
     url = url.replace('http://urn.fi/URN:NBN:fi:bib:me:','/bib/me/')
     url = url.replace('http://urn.fi/URN:NBN:fi:au:pn:','/au/pn/')
+    url = url.replace('http://urn.fi/URN:NBN:fi:au:cn:','/au/cn/')
     url = url.replace('http://www.yso.fi/onto/yso/','/yso/')
     return url
 

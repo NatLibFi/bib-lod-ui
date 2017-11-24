@@ -91,6 +91,25 @@ def person_resource_format(personid, fmt):
         abort(404)
     return make_format_response(res, fmt)
 
+@app.route('/au/cn/<regex("[0-9]+A"):organizationid>')
+@returns_rdf
+def organization_resource(organizationid):
+    res = model.get_resource('http://urn.fi/URN:NBN:fi:au:cn:%s' % organizationid)
+    if not res.exists():
+        abort(404)
+    if wants_rdf(request.headers.get('Accept', '')):
+        return res.graph
+    response = make_response(render_template('resource.html', title=res.name(), res=res))
+    response.headers['Vary'] = 'Accept'
+    return response
+
+@app.route('/au/cn/<regex("[0-9]+A"):organizationid>.<fmt>')
+def organization_resource_format(organizationid, fmt):
+    res = model.get_resource('http://urn.fi/URN:NBN:fi:au:cn:%s' % organizationid)
+    if not res.exists():
+        abort(404)
+    return make_format_response(res, fmt)
+
 
 @app.route('/yso/<regex("p[0-9]+"):conceptid>')
 @returns_rdf
