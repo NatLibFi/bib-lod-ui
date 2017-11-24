@@ -4,5 +4,6 @@
   <Description>Search for bibliographic entities in the NLF Linked Data Service</Description>
   <Url type="application/rss+xml" 
        template="{{ url_root }}opensearch?query={searchTerms}"/>
+  <Query role="example" searchTerms="ufo" />
 </OpenSearchDescription>
  
