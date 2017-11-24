@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
   <h1>{{ res.typename() }}: {{ res.name() }}</h1>
-  <div class="uri">URI: <span class="uri">{{ res.uri }}</span></div>
+  <div class="uri">URI: <a href="{{ res.uri }}">{{ res.uri }}</a></div>
   
   <dl class="dl-horizontal">
   {% for prop,values in res.properties().items() %}
@@ -93,7 +93,7 @@
             <div class="finna-link"><a href="{{ inst.finna_url() }}">View this in Finna</a></div>
             {% endif %}
             <h3>Instance: {{ inst.name() }}</h3>
-            <div class="uri">URI: <span class="uri">{{ inst.uri }}</span></div>
+            <div class="uri">URI: <a href="{{ inst.uri }}">{{ inst.uri }}</a></div>
             <dl class="dl-horizontal">
             {% for prop,values in inst.properties().items() %}
               <dt>{{ prop }}</dt>

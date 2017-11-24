@@ -84,11 +84,11 @@ h3 {
 
 }
 
-div.uri {
+.uri {
   margin:0 0 1em 0;
 }
 
-span.uri {
+.uri a {
   font-family: monospace;
   margin-left: 1em;
 }
