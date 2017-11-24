@@ -14,6 +14,27 @@ class RegexConverter (BaseConverter):
 app.url_map.converters['regex'] = RegexConverter
 
 
+def make_format_response(res, format):
+    if format == 'rdf':
+        response = make_response(res.graph.serialize(format='xml'))
+        response.headers['Content-Type'] = 'application/rdf+xml'
+    elif format == 'ttl':
+        response = make_response(res.graph.serialize(format='turtle'))
+        response.headers['Content-Type'] = 'text/turtle'
+    elif format == 'nt':
+        response = make_response(res.graph.serialize(format='nt'))
+        response.headers['Content-Type'] = 'application/n-triples'
+    elif format == 'json':
+        context = {"@vocab": "http://schema.org/"}
+        response = make_response(res.graph.serialize(format='json-ld', context=context))
+        response.headers['Content-Type'] = 'application/json'
+    elif format == 'html':
+        response = make_response(render_template('resource.html', title=res.name(), res=res))
+    else:
+        abort(404)
+    return response
+
+
 @app.route('/')
 @app.route('/index')
 @returns_rdf
@@ -42,24 +63,7 @@ def bib_resource_format(resourceid, format):
     res = model.get_resource('http://urn.fi/URN:NBN:fi:bib:me:%s' % resourceid)
     if not res.exists():
         abort(404)
-    if format == 'rdf':
-        response = make_response(res.graph.serialize(format='xml'))
-        response.headers['Content-Type'] = 'application/rdf+xml'
-    elif format == 'ttl':
-        response = make_response(res.graph.serialize(format='turtle'))
-        response.headers['Content-Type'] = 'text/turtle'
-    elif format == 'nt':
-        response = make_response(res.graph.serialize(format='nt'))
-        response.headers['Content-Type'] = 'application/n-triples'
-    elif format == 'json':
-        context = {"@vocab": "http://schema.org/"}
-        response = make_response(res.graph.serialize(format='json-ld', context=context))
-        response.headers['Content-Type'] = 'application/json'
-    elif format == 'html':
-        response = make_response(render_template('resource.html', title=res.name(), res=res))
-    else:
-        abort(404)
-    return response
+    return make_format_response(res, format)
 
 @app.route('/bib/me/I<instanceid>')
 @returns_rdf
@@ -88,24 +92,7 @@ def person_resource_format(personid, format):
     res = model.get_resource('http://urn.fi/URN:NBN:fi:au:pn:%s' % personid)
     if not res.exists():
         abort(404)
-    if format == 'rdf':
-        response = make_response(res.graph.serialize(format='xml'))
-        response.headers['Content-Type'] = 'application/rdf+xml'
-    elif format == 'ttl':
-        response = make_response(res.graph.serialize(format='turtle'))
-        response.headers['Content-Type'] = 'text/turtle'
-    elif format == 'nt':
-        response = make_response(res.graph.serialize(format='nt'))
-        response.headers['Content-Type'] = 'application/n-triples'
-    elif format == 'json':
-        context = {"@vocab": "http://schema.org/"}
-        response = make_response(res.graph.serialize(format='json-ld', context=context))
-        response.headers['Content-Type'] = 'application/json'
-    elif format == 'html':
-        response = make_response(render_template('resource.html', title=res.name(), res=res))
-    else:
-        abort(404)
-    return response
+    return make_format_response(res, format)
 
 
 @app.route('/yso/<regex("p[0-9]+"):conceptid>')
@@ -126,21 +113,4 @@ def concept_resource_format(conceptid, format):
     res = model.get_resource('http://www.yso.fi/onto/yso/%s' % conceptid)
     if not res.exists():
         abort(404)
-    if format == 'rdf':
-        response = make_response(res.graph.serialize(format='xml'))
-        response.headers['Content-Type'] = 'application/rdf+xml'
-    elif format == 'ttl':
-        response = make_response(res.graph.serialize(format='turtle'))
-        response.headers['Content-Type'] = 'text/turtle'
-    elif format == 'nt':
-        response = make_response(res.graph.serialize(format='nt'))
-        response.headers['Content-Type'] = 'application/n-triples'
-    elif format == 'json':
-        context = {"@vocab": "http://schema.org/"}
-        response = make_response(res.graph.serialize(format='json-ld', context=context))
-        response.headers['Content-Type'] = 'application/json'
-    elif format == 'html':
-        response = make_response(render_template('resource.html', title=res.name(), res=res))
-    else:
-        abort(404)
-    return response
+    return make_format_response(res, format)
