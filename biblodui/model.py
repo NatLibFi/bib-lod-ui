@@ -8,21 +8,23 @@ SCHEMA = Namespace('http://schema.org/')
 def get_resource(uri, graph=None):
     """return a Resource object of the appropriate class for the given URI"""
     if uri.startswith('http://urn.fi/URN:NBN:fi:bib:me:W'):
-        return Work(uri, graph)
-    if uri.startswith('http://urn.fi/URN:NBN:fi:bib:me:I'):
-        return Instance(uri, graph)
-    if uri.startswith('http://urn.fi/URN:NBN:fi:bib:me:P'):
-        return Person(uri, graph)
-    if uri.startswith('http://urn.fi/URN:NBN:fi:bib:me:O'):
-        return Organization(uri, graph)
-    if uri.startswith('http://urn.fi/URN:NBN:fi:au:pn:'):
-        return Person(uri, graph)
-    if uri.startswith('http://urn.fi/URN:NBN:fi:au:cn:'):
-        return Organization(uri, graph)
-    if uri.startswith('http://www.yso.fi/onto/yso/'):
-        return Concept(uri, graph)
-    # not a recognized URI pattern, just use a plain Resource
-    return Resource(uri, graph)
+        cls = Work
+    elif uri.startswith('http://urn.fi/URN:NBN:fi:bib:me:I'):
+        cls = Instance
+    elif uri.startswith('http://urn.fi/URN:NBN:fi:bib:me:P'):
+        cls = Person
+    elif uri.startswith('http://urn.fi/URN:NBN:fi:bib:me:O'):
+        cls = Organization
+    elif uri.startswith('http://urn.fi/URN:NBN:fi:au:pn:'):
+        cls = Person
+    elif uri.startswith('http://urn.fi/URN:NBN:fi:au:cn:'):
+        cls = Organization
+    elif uri.startswith('http://www.yso.fi/onto/yso/'):
+        cls = Concept
+    else:
+        # not a recognized URI pattern, just use a plain Resource
+        cls = Resource
+    return cls(uri, graph)
     
 
 class Resource:
