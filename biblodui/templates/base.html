@@ -18,13 +18,20 @@
   <header class="navbar navbar-static-top" id="topbar">
     <div class="container">
       <a href="http://www.nationallibrary.fi/en/"><img src="/static/img/logo_en.png" alt="The National Library of Finland"></a>
+      <div class="search">
+        <label for="search">Search:</label>
+        <input type="text" name="search" id="search">
+      </div>
     </div>
   </header>
+  
+  
   <div class="container"> 
 
     {% block content %}{% endblock %}
 
   </div> <!-- /container -->
+
   <footer id="footer">
     <div class="container">
       <a href="http://www.nationallibrary.fi/en/"><img src="/static/img/logo_en.png" alt="The National Library of Finland"></a>
@@ -35,6 +42,7 @@
   <!-- Latest compiled and minified JavaScript -->
   <script src="/static/js/jquery-3.2.1.min.js"></script>
   <script src="/static/js/bootstrap-3.3.7.min.js"></script>
+  <script src="/static/js/jquery.autocomplete-1.4.5.min.js"></script>
   <script src="/static/js/ui.js"></script>
 </body>
 </html>

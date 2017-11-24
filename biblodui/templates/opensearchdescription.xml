@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
+  <ShortName>NLF Linked Data Service Search</ShortName>
+  <Description>Search for bibliographic entities in the NLF Linked Data Service</Description>
+  <Url type="application/rss+xml" 
+       template="{{ url_root }}opensearch?query={searchTerms}"/>
+</OpenSearchDescription>
+ 

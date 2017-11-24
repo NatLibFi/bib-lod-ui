@@ -13,6 +13,19 @@ p, li {
   margin-bottom: 1em;
 }
 
+.search {
+  float: right;
+  margin-top: 2em;
+}
+
+.search label {
+  color: white;
+}
+
+.search input {
+  width: 40em;
+}
+
 #footer {
   background-color: #00224f;
   margin-top: 2em;
@@ -136,3 +149,10 @@ h3 {
   background-position: left center;
   background-repeat: no-repeat;
 }
+
+.autocomplete-suggestions { border: 1px solid #999; background: #FFF; overflow: auto; }
+.autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
+.autocomplete-selected { background: #F0F0F0; }
+.autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
+.autocomplete-group { padding: 2px 5px; }
+.autocomplete-group strong { display: block; border-bottom: 1px solid #000; }

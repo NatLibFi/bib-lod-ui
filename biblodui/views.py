@@ -110,3 +110,17 @@ def concept_resource_format(conceptid, fmt):
     if not res.exists():
         abort(404)
     return make_format_response(res, fmt)
+
+@app.route('/bib/opensearch')
+def opensearch():
+    query = request.args.get('query')
+    search = model.Search(query)
+    response = make_response(render_template('opensearch.xml', search=search, base_url=request.base_url, url_root=request.url_root))
+    response.headers['Content-Type'] = 'application/rss+xml; charset=utf-8'
+    return response
+
+@app.route('/bib/opensearchdescription.xml')
+def opensearchdescription():
+    response = make_response(render_template('opensearchdescription.xml', url_root=request.url_root))
+    response.headers['Content-Type'] = 'application/opensearchdescription+xml; charset=utf-8'
+    return response

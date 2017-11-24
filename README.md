@@ -32,11 +32,14 @@ or
 # License
 
 The code in this repository is licensed under the Apache license, version
-2.0. See [LICENSE](LICENSE) for details. Exceptions:
+2.0. See [LICENSE](LICENSE) for details. 
+
+## Exceptions
 
 The static content under `biblodui/static` consists partly of libraries we
-depend on, such as Bootstrap and jQuery. These have their own licenses (MIT
-License mostly), see the file headers for details.
+depend on, such as Bootstrap, jQuery and Ajax Autocomplete for jQuery. These
+have their own licenses (MIT License mostly), see the file headers for
+details.
 
 The icons under `biblodui/static/img` with filenames starting with
 `iconmonstr` are (c) iconmonstr.com and used in compliance to their

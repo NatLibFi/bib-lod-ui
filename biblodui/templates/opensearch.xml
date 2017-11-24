@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <rss version="2.0" 
+      xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/"
+      xmlns:atom="http://www.w3.org/2005/Atom">
+   <channel>
+     <title>Example.com Search: {{ search.query_string }}</title>
+     <link>{{ base_url }}?query={{ search.query_string }}</link>
+     <description>Search results for "{{ search.query_string }}"</description>
+     <opensearch:totalResults>{{ search.total_results() }}</opensearch:totalResults>
+     <opensearch:startIndex>1</opensearch:startIndex>
+     <opensearch:itemsPerPage>10</opensearch:itemsPerPage>
+     <atom:link rel="search" type="application/opensearchdescription+xml" href="{{ url_root }}opensearchdescription.xml"/>
+     <opensearch:Query role="request" searchTerms="{{ search.query_string }}" startPage="1" />
+     {% for result in search.results() %}
+     <item>
+       <title>{{ result.name() }}</title>
+       <link>{{ result.uri() }}</link>
+       <category>{{ result.typename() }}</category>
+       <description>
+       </description>
+     </item>
+     {% endfor %}
+   </channel>
+ </rss>

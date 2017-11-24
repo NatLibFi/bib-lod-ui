@@ -1,9 +1,11 @@
 from collections import OrderedDict
-from SPARQLWrapper import SPARQLWrapper
+from SPARQLWrapper import SPARQLWrapper, JSON
 from rdflib import URIRef, Namespace, RDF, RDFS, BNode
 from rdflib.namespace import SKOS
 
 SCHEMA = Namespace('http://schema.org/')
+
+
 
 def get_resource(uri, graph=None):
     """return a Resource object of the appropriate class for the given URI"""
@@ -26,6 +28,13 @@ def get_resource(uri, graph=None):
         cls = Resource
     return cls(uri, graph)
     
+def uri_to_url(uri):
+    url = uri
+    url = url.replace('http://urn.fi/URN:NBN:fi:bib:me:','/bib/me/')
+    url = url.replace('http://urn.fi/URN:NBN:fi:au:pn:','/au/pn/')
+    url = url.replace('http://www.yso.fi/onto/yso/','/yso/')
+    return url
+
 
 class Resource:
     prefixes = """
@@ -105,11 +114,7 @@ class Resource:
     def url(self):
         if isinstance(self.uri, BNode):
             return None
-        url = self.uri
-        url = url.replace('http://urn.fi/URN:NBN:fi:bib:me:','/bib/me/')
-        url = url.replace('http://urn.fi/URN:NBN:fi:au:pn:','/au/pn/')
-        url = url.replace('http://www.yso.fi/onto/yso/','/yso/')
-        return url
+        return uri_to_url(self.uri)
     
     def localname(self):
         return self.uri.split(':')[-1]
@@ -333,3 +338,57 @@ class Organization (Agent):
     
 class Concept (Resource):
     pass
+
+
+class SearchResult:
+    def __init__(self, binding):
+        self.binding = binding
+    
+    def uri(self):
+        return uri_to_url(self.binding['uri']['value'])
+    
+    def name(self):
+        return self.binding['literal']['value']
+    
+    def typename(self):
+        if 'type' in self.binding:
+            return self.binding['type']['value'].split('/')[-1]
+        else:
+            return ''
+    
+
+class Search:
+    query = """
+    PREFIX schema: <http://schema.org/>
+    PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+    PREFIX text: <http://jena.apache.org/text#>
+    PREFIX bf: <http://id.loc.gov/ontologies/bibframe/>
+    
+    SELECT *
+    WHERE {
+      (?uri ?score ?literal) text:query '%(query_string)s' .
+      OPTIONAL {
+        ?uri a ?type .
+        FILTER (?type != schema:CreativeWork)
+      }
+      FILTER(isIRI(?uri))
+      FILTER NOT EXISTS { ?uri a bf:Instance }
+    }
+    ORDER BY DESC(?score)
+    LIMIT 10
+    """
+    
+    def __init__(self, query_string):
+        self.query_string = query_string
+
+        sparql = SPARQLWrapper("http://data.nationallibrary.fi/bib/sparql")
+        sparql.setQuery(self.query % {'query_string': self.query_string})
+        sparql.setReturnFormat(JSON)
+        results = sparql.query().convert()
+        self.bindings = results["results"]["bindings"]
+    
+    def total_results(self):
+        return len(self.bindings)
+    
+    def results(self):
+        return [SearchResult(binding) for binding in self.bindings]
