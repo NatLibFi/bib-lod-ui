@@ -19,6 +19,8 @@ def get_resource(uri, graph=None):
         return Person(uri, graph)
     if uri.startswith('http://urn.fi/URN:NBN:fi:au:cn:'):
         return Organization(uri, graph)
+    if uri.startswith('http://www.yso.fi/onto/yso/'):
+        return Concept(uri, graph)
     # not a recognized URI pattern, just use a plain Resource
     return Resource(uri, graph)
     
@@ -327,3 +329,5 @@ class Person (Agent):
 class Organization (Agent):
     pass
     
+class Concept (Resource):
+    pass

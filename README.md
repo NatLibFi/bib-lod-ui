@@ -38,5 +38,9 @@ The static content under `biblodui/static` consists partly of libraries we
 depend on, such as Bootstrap and jQuery. These have their own licenses (MIT
 License mostly), see the file headers for details.
 
+The icons under `biblodui/static/img` with filenames starting with
+`iconmonstr` are (c) iconmonstr.com and used in compliance to their
+[License](https://iconmonstr.com/license/).
+
 The logos under `biblodui/static/img` are (c) National Library of Finland
 and require permission to use.

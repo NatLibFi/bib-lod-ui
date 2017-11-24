@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-  <h1>{{ res.typename() }}: {{ res.name() }}</h1>
+  <h1 class="type-{{ res.typename().lower() }}">{{ res.name() }}</h1>
   <div class="uri">URI: <a href="{{ res.uri }}">{{ res.uri }}</a></div>
   
   <dl class="dl-horizontal">
@@ -75,7 +75,7 @@
   {% endif %}
   
   {% if res.has_instances() %}
-  <h2>Editions</h2>
+  <h2>Instances</h2>
   <div class="container">
     <div class="row">
       <div class="col-md-4">
@@ -92,7 +92,7 @@
             {% if inst.finna_url() %}
             <div class="finna-link"><a href="{{ inst.finna_url() }}">View this in Finna</a></div>
             {% endif %}
-            <h3>Instance: {{ inst.name() }}</h3>
+            <h3 class="type-{{ inst.typename().lower() }}">{{ inst.name() }}</h3>
             <div class="uri">URI: <a href="{{ inst.uri }}">{{ inst.uri }}</a></div>
             <dl class="dl-horizontal">
             {% for prop,values in inst.properties().items() %}

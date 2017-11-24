@@ -104,3 +104,35 @@ h3 {
   background-position: left center;
   background-repeat: no-repeat;
 }
+
+.type-work {
+  padding: 0 0 0 1.2em;
+  background-image: url("/static/img/iconmonstr-light-bulb-7.svg");
+  background-size: 1em 1em;
+  background-position: left top;
+  background-repeat: no-repeat;
+}
+
+.type-instance {
+  padding: 0 0 0 1.2em;
+  background-image: url("/static/img/iconmonstr-book-17.svg");
+  background-size: 1em 1em;
+  background-position: left center;
+  background-repeat: no-repeat;
+}
+
+.type-person {
+  padding: 0 0 0 1.2em;
+  background-image: url("/static/img/iconmonstr-user-2.svg");
+  background-size: 1em 1em;
+  background-position: left center;
+  background-repeat: no-repeat;
+}
+
+.type-concept {
+  padding: 0 0 0 1.2em;
+  background-image: url("/static/img/iconmonstr-tag-11.svg");
+  background-size: 1em 1em;
+  background-position: left center;
+  background-repeat: no-repeat;
+}
