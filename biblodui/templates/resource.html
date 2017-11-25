@@ -137,8 +137,7 @@
   {% endif %}
   
 <div class="row">
-  <div class="col-md-12">
-        <div class="download">
+  <div class="col-md-12 download">
           <p>Download this resource as RDF:</p>
           <ul class="list-inline">
           <li><a href="{{ res.localname() }}.ttl">Turtle</a></li>
@@ -147,8 +146,13 @@
           <li><a href="{{ res.localname() }}.json">JSON-LD</a></li>
           </ul>
         
-        </div>
   </div>
 </div>
+
+<script type="application/ld+json">
+{% autoescape false %}
+{{ res.serialize('json-ld').decode() }}
+{% endautoescape %}
+</script>
   
 {% endblock %}

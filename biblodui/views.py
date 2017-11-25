@@ -16,17 +16,16 @@ app.url_map.converters['regex'] = RegexConverter
 
 def make_format_response(res, fmt):
     if fmt == 'rdf':
-        response = make_response(res.graph.serialize(format='xml'))
+        response = make_response(res.serialize('xml'))
         response.headers['Content-Type'] = 'application/rdf+xml'
     elif fmt == 'ttl':
-        response = make_response(res.graph.serialize(format='turtle'))
+        response = make_response(res.serialize('turtle'))
         response.headers['Content-Type'] = 'text/turtle'
     elif fmt == 'nt':
-        response = make_response(res.graph.serialize(format='nt'))
+        response = make_response(res.serialize('nt'))
         response.headers['Content-Type'] = 'application/n-triples'
     elif fmt == 'json':
-        context = {"@vocab": "http://schema.org/"}
-        response = make_response(res.graph.serialize(format='json-ld', context=context))
+        response = make_response(res.serialize('json-ld'))
         response.headers['Content-Type'] = 'application/json'
     elif fmt == 'html':
         response = make_response(render_template('resource.html', title=res.name(), res=res))

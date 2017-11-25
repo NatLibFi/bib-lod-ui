@@ -4,7 +4,7 @@ from rdflib import URIRef, Namespace, RDF, RDFS, BNode
 from rdflib.namespace import SKOS
 
 SCHEMA = Namespace('http://schema.org/')
-
+RDAU = Namespace('http://rdaregistry.info/Elements/u/')
 
 
 def get_resource(uri, graph=None):
@@ -163,6 +163,11 @@ class Resource:
     def is_agent(self):
         return False
     
+    def serialize(self, fmt):
+        if fmt == 'json-ld':
+            context = {"@vocab": SCHEMA, "rdau": RDAU }
+            return self.graph.serialize(format='json-ld', context=context)
+        return self.graph.serialize(format=fmt)
         
 
 class Work (Resource):
