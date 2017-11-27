@@ -33,5 +33,5 @@ $('#search').autocomplete({
         console.log('You selected: ' + suggestion.value + ', ' + suggestion.data);
         window.location.href = suggestion.data.uri;
     },
-    deferRequestBy: 300
+    deferRequestBy: 500
 });
