@@ -375,13 +375,10 @@ class Search:
     
     SELECT *
     WHERE {
-      (?uri ?score ?literal) text:query '%(query_string)s' .
-      OPTIONAL {
-        ?uri a ?type .
-        FILTER (?type != schema:CreativeWork)
-      }
+      (?uri ?score ?literal) text:query ('%(query_string)s' 100) .
+      ?uri a ?type .
+      VALUES ?type { bf:Work schema:Person schema:Organization }
       FILTER(isIRI(?uri))
-      FILTER NOT EXISTS { ?uri a bf:Instance }
     }
     ORDER BY DESC(?score)
     LIMIT 10

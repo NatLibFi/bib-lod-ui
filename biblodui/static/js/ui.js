@@ -17,7 +17,7 @@ $('#search').autocomplete({
           xml.find("item").each(function() {
             var $this = $(this),
               item = {
-                value: $this.find("title").text(),
+                value: $this.find("category").text() + ": " + $this.find("title").text() + " (" + $this.find("link").text().split('/').pop() + ")",
                 data: {
                   type: $this.find("category").text(),
                   uri: $this.find("link").text()
