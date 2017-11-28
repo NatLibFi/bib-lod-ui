@@ -17,6 +17,8 @@ def get_resource(uri, graph=None):
         cls = Person
     elif uri.startswith('http://urn.fi/URN:NBN:fi:bib:me:O'):
         cls = Organization
+    elif uri.startswith('http://urn.fi/URN:NBN:fi:bib:me:C'):
+        cls = Collection
     elif uri.startswith('http://urn.fi/URN:NBN:fi:au:pn:'):
         cls = Person
     elif uri.startswith('http://urn.fi/URN:NBN:fi:au:cn:'):
@@ -276,7 +278,9 @@ class Instance (Resource):
     def get_work(self):
         work_uri = self.graph.value(self.uri, SCHEMA.exampleOfWork, None, any=True)
         return Work(work_uri, self.graph)
-        
+
+class Collection (Work):
+    pass
 
 class Agent (Resource):
     query = """

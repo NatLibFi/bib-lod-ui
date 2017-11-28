@@ -71,6 +71,18 @@ def bib_instance(instanceid):
     work = inst.get_work()
     return redirect("%s#I%s" % (work.url(), instanceid))
 
+@app.route('/bib/me/C<collectionid>')
+@returns_rdf
+def bib_collection(collectionid):
+    res = model.get_resource('http://urn.fi/URN:NBN:fi:bib:me:C%s' % collectionid)
+    if not res.exists():
+        abort(404)
+    if wants_rdf(request.headers.get('Accept', '')):
+        return res.graph
+    response = make_response(render_template('resource.html', title=res.name(), res=res))
+    response.headers['Vary'] = 'Accept'
+    return response
+
 @app.route('/au/pn/<regex("[0-9]+"):personid>')
 @returns_rdf
 def person_resource(personid):
