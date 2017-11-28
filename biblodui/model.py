@@ -6,6 +6,7 @@ from rdflib.namespace import SKOS
 SCHEMA = Namespace('http://schema.org/')
 RDAU = Namespace('http://rdaregistry.info/Elements/u/')
 
+ENDPOINT = "http://data.nationallibrary.fi/bib/sparql"
 
 def get_resource(uri, graph=None):
     """return a Resource object of the appropriate class for the given URI"""
@@ -84,7 +85,7 @@ class Resource:
             self.graph = self.query_for_graph()
     
     def query_for_graph(self):
-        sparql = SPARQLWrapper("http://data.nationallibrary.fi/bib/sparql")
+        sparql = SPARQLWrapper(ENDPOINT)
         sparql.setQuery(self.query % {'uri': self.uri, 'prefixes': self.prefixes})
         graph = sparql.query().convert()
         return graph
@@ -391,7 +392,7 @@ class Search:
     def __init__(self, query_string):
         self.query_string = query_string
 
-        sparql = SPARQLWrapper("http://data.nationallibrary.fi/bib/sparql")
+        sparql = SPARQLWrapper(ENDPOINT)
         sparql.setQuery(self.query % {'query_string': self.query_string})
         sparql.setReturnFormat(JSON)
         results = sparql.query().convert()
@@ -402,3 +403,56 @@ class Search:
     
     def results(self):
         return [SearchResult(binding) for binding in self.bindings]
+
+class Collections:
+    query = """
+    PREFIX schema: <http://schema.org/>
+    
+    SELECT *
+    WHERE {
+      ?uri a schema:Collection ;
+        schema:name ?name .
+    }
+    ORDER BY LCASE(?name)
+    """
+    
+    def __init__(self):
+        sparql = SPARQLWrapper(ENDPOINT)
+        sparql.setQuery(self.query)
+        sparql.setReturnFormat(JSON)
+        results = sparql.query().convert()
+        self.bindings = results["results"]["bindings"]
+
+    def list_collections(self):
+        return [{'uri': b['uri']['value'],
+                 'url': uri_to_url(b['uri']['value']),
+                 'name': b['name']['value']}
+                for b in self.bindings]
+                 
+class ConceptSchemes:
+    query = """
+    PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+    PREFIX dc: <http://purl.org/dc/elements/1.1/>
+    
+    SELECT *
+    WHERE {
+      ?uri a skos:ConceptScheme ;
+        dc:title ?title .
+        FILTER(langMatches(LANG(?title), 'en'))
+    }
+    ORDER BY LCASE(?title)
+    """
+    
+    def __init__(self):
+        sparql = SPARQLWrapper(ENDPOINT)
+        sparql.setQuery(self.query)
+        sparql.setReturnFormat(JSON)
+        results = sparql.query().convert()
+        self.bindings = results["results"]["bindings"]
+
+    def list_concept_schemes(self):
+        return [{'uri': b['uri']['value'],
+                 'url': uri_to_url(b['uri']['value']),
+                 'title': b['title']['value']}
+                for b in self.bindings]
+                 

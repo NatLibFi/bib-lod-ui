@@ -38,10 +38,9 @@ def make_format_response(res, fmt):
 @app.route('/index')
 @returns_rdf
 def index():
-    res = model.get_resource('http://urn.fi/URN:NBN:fi:bib:me:W00009584100')
-    if wants_rdf(request.headers.get('Accept', '')):
-        return res.graph
-    return render_template('resource.html', title=res.name(), res=res)
+    collections = model.Collections()
+    conceptschemes = model.ConceptSchemes()
+    return render_template('index.html', title='Index', collections=collections, conceptschemes=conceptschemes)
 
 @app.route('/bib/me/<string(length=12):resourceid>')
 @returns_rdf
