@@ -136,13 +136,16 @@ def concept_resource_format(conceptid, fmt):
     res = model.get_resource('http://www.yso.fi/onto/yso/%s' % conceptid)
     return make_format_response(res, fmt)
 
-@app.route('/bib/opensearch')
-def opensearch():
+@app.route('/bib/search.<fmt>')
+def search(fmt):
+    if fmt not in ('html','xml'):
+        abort(404)
     query = request.args.get('query')
     items_per_page = request.args.get('count', default=20, type=int)
     search = model.Search(query, items_per_page)
-    response = make_response(render_template('opensearch.xml', search=search, base_url=request.base_url, url_root=request.url_root))
-    response.headers['Content-Type'] = 'application/rss+xml; charset=utf-8'
+    response = make_response(render_template('search.%s' % fmt, search=search, base_url=request.base_url, url_root=request.url_root))
+    if fmt == 'xml':
+        response.headers['Content-Type'] = 'application/rss+xml; charset=utf-8'
     return response
 
 @app.route('/bib/opensearchdescription.xml')

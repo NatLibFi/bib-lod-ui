@@ -8,10 +8,13 @@ $(document).ready(function() {
     }
 });
 
-$('#search').autocomplete({
+$('#query').autocomplete({
     minChars: 3,
+    preventBadQueries: false,
+    showNoSuggestionNotice: true,
+    noSuggestionNotice: "No results",
     lookup: function (query, done) {
-        $.get('/bib/opensearch?query=' + query, function(data) {
+        $.get('/bib/search.xml?query=' + query, function(data) {
           var xml = $(data);
           var items = [];
           xml.find("item").each(function() {
@@ -30,7 +33,6 @@ $('#search').autocomplete({
         });
     },
     onSelect: function (suggestion) {
-        console.log('You selected: ' + suggestion.value + ', ' + suggestion.data);
         window.location.href = suggestion.data.uri;
     },
     deferRequestBy: 500

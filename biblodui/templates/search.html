@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block head %}
+     <meta name="totalResults" content="{{ search.total_results() }}"/>
+     <meta name="startIndex" content="1"/>
+     <meta name="itemsPerPage" content="{{ search.items_per_page }}"/>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-12">
+  <h1>Search results: '{{ search.query_string }}'</h1>
+    <ol class="search-result">
+      {% for res in search.results() %}
+      <li>
+        <h2 class="type-{{ res.typename().lower() }}"><a href="{{ res.uri() }}">{{ res.name() }}</a></h2>
+        <p>
+          {{ res.typename() }}
+        </p>
+      </li>
+      {% endfor %}
+    </ol>
+  </div>
+</div>
+{% endblock %}

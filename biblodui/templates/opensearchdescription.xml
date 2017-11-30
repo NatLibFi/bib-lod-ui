@@ -2,8 +2,14 @@
 <OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
   <ShortName>NLF Linked Data</ShortName>
   <Description>Search for bibliographic entities in the NLF Linked Data Service</Description>
-  <Url type="application/rss+xml" 
-       template="{{ url_root }}opensearch?query={searchTerms}&amp;count={count?}"/>
+  <Image height="64" width="64" type="image/png">{{ url_root }}static/img/logo_en_64x64.png</Image>
+  <Image height="16" width="16" type="image/x-icon">{{ url_root }}static/img/favicon.ico</Image>
+  <Url type="application/rss+xml" method="get"
+       template="{{ url_root }}bib/search.xml?query={searchTerms}&amp;count={count?}"/>
+  <Url type="text/html" method="get"
+       template="{{ url_root }}bib/search.html?query={searchTerms}&amp;count={count?}"/>
+  <InputEncoding>UTF-8</InputEncoding>
+  <OutputEncoding>UTF-8</OutputEncoding>
   <Query role="example" searchTerms="ufo" />
 </OpenSearchDescription>
  
