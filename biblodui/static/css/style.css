@@ -54,7 +54,7 @@ p, li {
   height: 6em;
 }
 
-#footer p, #topbar p {
+#footer p, #topbar p, #topbar p a {
   color: white;
   margin-top: 1em;
   font-family: "Open Sans",Helvetica,Arial,sans-serif,Nimbus Sans L;
