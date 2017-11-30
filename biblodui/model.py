@@ -398,17 +398,21 @@ class Search:
       FILTER(isIRI(?uri))
     }
     ORDER BY DESC(?score)
-    LIMIT 10
+    LIMIT %(items_per_page)d
     """
     
-    def __init__(self, query_string):
-        self.query_string = query_string
+    def __init__(self, query_string, items_per_page=20):
+        self.query_string = self.format_query_string(query_string)
+        self.items_per_page = items_per_page
 
         sparql = SPARQLWrapper(ENDPOINT)
-        sparql.setQuery(self.query % {'query_string': self.query_string})
+        sparql.setQuery(self.query % {'query_string': self.query_string, 'items_per_page': self.items_per_page})
         sparql.setReturnFormat(JSON)
         results = sparql.query().convert()
         self.bindings = results["results"]["bindings"]
+    
+    def format_query_string(self, query_string):
+        return " ".join(["+%s" % word for word in query_string.split()])
     
     def total_results(self):
         return len(self.bindings)

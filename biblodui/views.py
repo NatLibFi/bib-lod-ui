@@ -139,7 +139,8 @@ def concept_resource_format(conceptid, fmt):
 @app.route('/bib/opensearch')
 def opensearch():
     query = request.args.get('query')
-    search = model.Search(query)
+    items_per_page = request.args.get('count', default=20, type=int)
+    search = model.Search(query, items_per_page)
     response = make_response(render_template('opensearch.xml', search=search, base_url=request.base_url, url_root=request.url_root))
     response.headers['Content-Type'] = 'application/rss+xml; charset=utf-8'
     return response
