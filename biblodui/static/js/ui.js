@@ -32,6 +32,15 @@ $('#query').autocomplete({
           done(result);
         });
     },
+    onSearchStart: function (query) {
+      $(this).addClass("spin");
+    },
+    onSearchComplete: function (query, suggestions) {
+      $(this).removeClass("spin");
+    },
+    onSearchError: function (query, jqXHR, textStatus, errorThrown) {
+      $(this).removeClass("spin");
+    },
     onSelect: function (suggestion) {
         window.location.href = suggestion.data.uri;
     },
