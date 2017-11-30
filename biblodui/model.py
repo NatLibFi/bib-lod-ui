@@ -22,9 +22,13 @@ def get_resource(uri, graph=None):
         cls = Collection
     elif uri.startswith('http://urn.fi/URN:NBN:fi:au:pn:'):
         cls = Person
+    elif uri == 'http://urn.fi/URN:NBN:fi:au:cn:':
+        cls = ConceptScheme
     elif uri.startswith('http://urn.fi/URN:NBN:fi:au:cn:'):
         cls = Organization
     elif uri == 'http://www.yso.fi/onto/yso/':
+        cls = ConceptScheme
+    elif uri == 'http://www.yso.fi/onto/yso/places':
         cls = ConceptScheme
     elif uri.startswith('http://www.yso.fi/onto/yso/'):
         cls = Concept

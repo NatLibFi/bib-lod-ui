@@ -157,9 +157,33 @@ h3 {
   background-repeat: no-repeat;
 }
 
+.type-organization {
+  padding: 0 0 0 1.2em;
+  background-image: url("/static/img/iconmonstr-building-16.svg");
+  background-size: 1em 1em;
+  background-position: left top;
+  background-repeat: no-repeat;
+}
+
 .type-concept {
   padding: 0 0 0 1.2em;
   background-image: url("/static/img/iconmonstr-tag-11.svg");
+  background-size: 1em 1em;
+  background-position: left top;
+  background-repeat: no-repeat;
+}
+
+.type-conceptscheme {
+  padding: 0 0 0 1.2em;
+  background-image: url("/static/img/iconmonstr-tag-14.svg");
+  background-size: 1em 1em;
+  background-position: left top;
+  background-repeat: no-repeat;
+}
+
+.type-collection {
+  padding: 0 0 0 1.2em;
+  background-image: url("/static/img/iconmonstr-archive-4.svg");
   background-size: 1em 1em;
   background-position: left top;
   background-repeat: no-repeat;
