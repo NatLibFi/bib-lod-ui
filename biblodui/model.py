@@ -1,6 +1,6 @@
 from collections import OrderedDict
 from SPARQLWrapper import SPARQLWrapper, JSON
-from rdflib import URIRef, Namespace, RDF, RDFS, BNode
+from rdflib import Graph, URIRef, Namespace, RDF, RDFS, BNode
 from rdflib.namespace import SKOS
 
 SCHEMA = Namespace('http://schema.org/')
@@ -87,7 +87,8 @@ class Resource:
     def query_for_graph(self):
         sparql = SPARQLWrapper(ENDPOINT)
         sparql.setQuery(self.query % {'uri': self.uri, 'prefixes': self.prefixes})
-        graph = sparql.query().convert()
+        graph = Graph()
+        graph.parse(sparql.query().response)
         return graph
     
     def exists(self):
@@ -168,7 +169,7 @@ class Resource:
     
     def serialize(self, fmt):
         if fmt == 'json-ld':
-            context = {"@vocab": SCHEMA, "rdau": RDAU }
+            context = {"@vocab": SCHEMA, "rdau": RDAU, "skos": SKOS, "skos:prefLabel": {"@container": "@language"} }
             return self.graph.serialize(format='json-ld', context=context)
         return self.graph.serialize(format=fmt)
         
