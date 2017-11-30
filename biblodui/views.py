@@ -15,6 +15,8 @@ app.url_map.converters['regex'] = RegexConverter
 
 
 def make_format_response(res, fmt):
+    if not res.exists():
+        abort(404)
     if fmt == 'rdf':
         response = make_response(res.serialize('xml'))
         response.headers['Content-Type'] = 'application/rdf+xml'
@@ -57,8 +59,6 @@ def bib_resource(resourceid):
 @app.route('/bib/me/<resourceid>.<fmt>')
 def bib_resource_format(resourceid, fmt):
     res = model.get_resource('http://urn.fi/URN:NBN:fi:bib:me:%s' % resourceid)
-    if not res.exists():
-        abort(404)
     return make_format_response(res, fmt)
 
 @app.route('/bib/me/I<instanceid>')
@@ -97,8 +97,6 @@ def person_resource(personid):
 @app.route('/au/pn/<regex("[0-9]+"):personid>.<fmt>')
 def person_resource_format(personid, fmt):
     res = model.get_resource('http://urn.fi/URN:NBN:fi:au:pn:%s' % personid)
-    if not res.exists():
-        abort(404)
     return make_format_response(res, fmt)
 
 @app.route('/au/cn/')
@@ -127,8 +125,6 @@ def organization_resource(organizationid):
 @app.route('/au/cn/<regex("[0-9]+A"):organizationid>.<fmt>')
 def organization_resource_format(organizationid, fmt):
     res = model.get_resource('http://urn.fi/URN:NBN:fi:au:cn:%s' % organizationid)
-    if not res.exists():
-        abort(404)
     return make_format_response(res, fmt)
 
 @app.route('/yso/')
@@ -145,8 +141,6 @@ def yso():
 @app.route('/yso/index.<fmt>')
 def yso_format(fmt):
     res = model.get_resource('http://www.yso.fi/onto/yso/')
-    if not res.exists():
-        abort(404)
     return make_format_response(res, fmt)
 
 @app.route('/yso/places')
@@ -163,8 +157,6 @@ def yso_places():
 @app.route('/yso/places.<fmt>')
 def yso_places_format(fmt):
     res = model.get_resource('http://www.yso.fi/onto/yso/places')
-    if not res.exists():
-        abort(404)
     return make_format_response(res, fmt)
 
 @app.route('/yso/<regex("p[0-9]+"):conceptid>')
@@ -182,8 +174,6 @@ def concept_resource(conceptid):
 @app.route('/yso/<regex("p[0-9]+"):conceptid>.<fmt>')
 def concept_resource_format(conceptid, fmt):
     res = model.get_resource('http://www.yso.fi/onto/yso/%s' % conceptid)
-    if not res.exists():
-        abort(404)
     return make_format_response(res, fmt)
 
 @app.route('/bib/opensearch')
