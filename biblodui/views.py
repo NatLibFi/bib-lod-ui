@@ -35,6 +35,14 @@ def make_format_response(res, fmt):
         abort(404)
     return response
 
+def make_resource_response(res):
+    if not res.exists():
+        abort(404)
+    if wants_rdf(request.headers.get('Accept', '')):
+        data = res.graph
+    else:
+        data = render_template('resource.html', title=res.name(), res=res)
+    return (data, 200, {'Vary': 'Accept'})
 
 @app.route('/')
 @app.route('/index')
@@ -48,13 +56,7 @@ def index():
 @returns_rdf
 def bib_resource(resourceid):
     res = model.get_resource('http://urn.fi/URN:NBN:fi:bib:me:%s' % resourceid)
-    if not res.exists():
-        abort(404)
-    if wants_rdf(request.headers.get('Accept', '')):
-        data = res.graph
-    else:
-        data = render_template('resource.html', title=res.name(), res=res)
-    return (data, 200, {'Vary': 'Accept'})
+    return make_resource_response(res)
 
 @app.route('/bib/me/<resourceid>.<fmt>')
 def bib_resource_format(resourceid, fmt):
@@ -74,25 +76,13 @@ def bib_instance(instanceid):
 @returns_rdf
 def bib_collection(collectionid):
     res = model.get_resource('http://urn.fi/URN:NBN:fi:bib:me:C%s' % collectionid)
-    if not res.exists():
-        abort(404)
-    if wants_rdf(request.headers.get('Accept', '')):
-        data = res.graph
-    else:
-        data = render_template('resource.html', title=res.name(), res=res)
-    return (data, 200, {'Vary': 'Accept'})
+    return make_resource_response(res)
 
 @app.route('/au/pn/<regex("[0-9]+"):personid>')
 @returns_rdf
 def person_resource(personid):
     res = model.get_resource('http://urn.fi/URN:NBN:fi:au:pn:%s' % personid)
-    if not res.exists():
-        abort(404)
-    if wants_rdf(request.headers.get('Accept', '')):
-        data = res.graph
-    else:
-        data = render_template('resource.html', title=res.name(), res=res)
-    return (data, 200, {'Vary': 'Accept'})
+    return make_resource_response(res)
 
 @app.route('/au/pn/<regex("[0-9]+"):personid>.<fmt>')
 def person_resource_format(personid, fmt):
@@ -102,25 +92,13 @@ def person_resource_format(personid, fmt):
 @app.route('/au/cn/')
 def organization():
     res = model.get_resource('http://urn.fi/URN:NBN:fi:au:cn:')
-    if not res.exists():
-        abort(404)
-    if wants_rdf(request.headers.get('Accept', '')):
-        return res.graph
-    response = make_response(render_template('resource.html', title=res.name(), res=res))
-    response.headers['Vary'] = 'Accept'
-    return response
+    return make_resource_response(res)
 
 @app.route('/au/cn/<regex("[0-9]+A"):organizationid>')
 @returns_rdf
 def organization_resource(organizationid):
     res = model.get_resource('http://urn.fi/URN:NBN:fi:au:cn:%s' % organizationid)
-    if not res.exists():
-        abort(404)
-    if wants_rdf(request.headers.get('Accept', '')):
-        data = res.graph
-    else:
-        data = render_template('resource.html', title=res.name(), res=res)
-    return (data, 200, {'Vary': 'Accept'})
+    return make_resource_response(res)
 
 @app.route('/au/cn/<regex("[0-9]+A"):organizationid>.<fmt>')
 def organization_resource_format(organizationid, fmt):
@@ -130,13 +108,7 @@ def organization_resource_format(organizationid, fmt):
 @app.route('/yso/')
 def yso():
     res = model.get_resource('http://www.yso.fi/onto/yso/')
-    if not res.exists():
-        abort(404)
-    if wants_rdf(request.headers.get('Accept', '')):
-        return res.graph
-    response = make_response(render_template('resource.html', title=res.name(), res=res))
-    response.headers['Vary'] = 'Accept'
-    return response
+    return make_resource_response(res)
 
 @app.route('/yso/index.<fmt>')
 def yso_format(fmt):
@@ -146,13 +118,7 @@ def yso_format(fmt):
 @app.route('/yso/places')
 def yso_places():
     res = model.get_resource('http://www.yso.fi/onto/yso/places')
-    if not res.exists():
-        abort(404)
-    if wants_rdf(request.headers.get('Accept', '')):
-        return res.graph
-    response = make_response(render_template('resource.html', title=res.name(), res=res))
-    response.headers['Vary'] = 'Accept'
-    return response
+    return make_resource_response(res)
 
 @app.route('/yso/places.<fmt>')
 def yso_places_format(fmt):
@@ -163,13 +129,7 @@ def yso_places_format(fmt):
 @returns_rdf
 def concept_resource(conceptid):
     res = model.get_resource('http://www.yso.fi/onto/yso/%s' % conceptid)
-    if not res.exists():
-        abort(404)
-    if wants_rdf(request.headers.get('Accept', '')):
-        return res.graph
-    response = make_response(render_template('resource.html', title=res.name(), res=res))
-    response.headers['Vary'] = 'Accept'
-    return response
+    return make_resource_response(res)
 
 @app.route('/yso/<regex("p[0-9]+"):conceptid>.<fmt>')
 def concept_resource_format(conceptid, fmt):
