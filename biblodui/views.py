@@ -101,6 +101,17 @@ def person_resource_format(personid, fmt):
         abort(404)
     return make_format_response(res, fmt)
 
+@app.route('/au/cn/')
+def organization():
+    res = model.get_resource('http://urn.fi/URN:NBN:fi:au:cn:')
+    if not res.exists():
+        abort(404)
+    if wants_rdf(request.headers.get('Accept', '')):
+        return res.graph
+    response = make_response(render_template('resource.html', title=res.name(), res=res))
+    response.headers['Vary'] = 'Accept'
+    return response
+
 @app.route('/au/cn/<regex("[0-9]+A"):organizationid>')
 @returns_rdf
 def organization_resource(organizationid):
@@ -120,6 +131,41 @@ def organization_resource_format(organizationid, fmt):
         abort(404)
     return make_format_response(res, fmt)
 
+@app.route('/yso/')
+def yso():
+    res = model.get_resource('http://www.yso.fi/onto/yso/')
+    if not res.exists():
+        abort(404)
+    if wants_rdf(request.headers.get('Accept', '')):
+        return res.graph
+    response = make_response(render_template('resource.html', title=res.name(), res=res))
+    response.headers['Vary'] = 'Accept'
+    return response
+
+@app.route('/yso/index.<fmt>')
+def yso_format(fmt):
+    res = model.get_resource('http://www.yso.fi/onto/yso/')
+    if not res.exists():
+        abort(404)
+    return make_format_response(res, fmt)
+
+@app.route('/yso/places')
+def yso_places():
+    res = model.get_resource('http://www.yso.fi/onto/yso/places')
+    if not res.exists():
+        abort(404)
+    if wants_rdf(request.headers.get('Accept', '')):
+        return res.graph
+    response = make_response(render_template('resource.html', title=res.name(), res=res))
+    response.headers['Vary'] = 'Accept'
+    return response
+
+@app.route('/yso/places.<fmt>')
+def yso_places_format(fmt):
+    res = model.get_resource('http://www.yso.fi/onto/yso/places')
+    if not res.exists():
+        abort(404)
+    return make_format_response(res, fmt)
 
 @app.route('/yso/<regex("p[0-9]+"):conceptid>')
 @returns_rdf

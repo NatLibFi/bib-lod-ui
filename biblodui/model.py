@@ -1,7 +1,7 @@
 from collections import OrderedDict
 from SPARQLWrapper import SPARQLWrapper, JSON
 from rdflib import Graph, URIRef, Namespace, RDF, RDFS, BNode
-from rdflib.namespace import SKOS
+from rdflib.namespace import SKOS, DC
 
 SCHEMA = Namespace('http://schema.org/')
 RDAU = Namespace('http://rdaregistry.info/Elements/u/')
@@ -24,6 +24,8 @@ def get_resource(uri, graph=None):
         cls = Person
     elif uri.startswith('http://urn.fi/URN:NBN:fi:au:cn:'):
         cls = Organization
+    elif uri == 'http://www.yso.fi/onto/yso/':
+        cls = ConceptScheme
     elif uri.startswith('http://www.yso.fi/onto/yso/'):
         cls = Concept
     else:
@@ -98,7 +100,7 @@ class Resource:
         return self.__class__.__name__
 
     def name(self):
-        props = (SCHEMA.name, SKOS.prefLabel, RDFS.label)
+        props = (SCHEMA.name, SKOS.prefLabel, DC.title, RDFS.label)
         labels = self.graph.preferredLabel(self.uri, lang='en', labelProperties=props)
         if len(labels) > 0:
             return labels[0][1]
@@ -108,7 +110,6 @@ class Resource:
             return labels[0][1]
         
         return "<%s>" % self.uri
-    
     
     def __str__(self):
         return self.name()
@@ -122,7 +123,10 @@ class Resource:
         return uri_to_url(self.uri)
     
     def localname(self):
-        return self.uri.split(':')[-1]
+        ln = self.uri.split(':')[-1].split('/')[-1]
+        if ln == '':
+            return 'index'
+        return ln
     
     def property_name(self, prop):
         return prop.split('/')[-1].split('#')[-1] # local name
@@ -352,6 +356,9 @@ class Organization (Agent):
     pass
     
 class Concept (Resource):
+    pass
+
+class ConceptScheme (Resource):
     pass
 
 
