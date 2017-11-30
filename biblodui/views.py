@@ -49,10 +49,10 @@ def bib_resource(resourceid):
     if not res.exists():
         abort(404)
     if wants_rdf(request.headers.get('Accept', '')):
-        return res.graph
-    response = make_response(render_template('resource.html', title=res.name(), res=res))
-    response.headers['Vary'] = 'Accept'
-    return response
+        data = res.graph
+    else:
+        data = render_template('resource.html', title=res.name(), res=res)
+    return (data, 200, {'Vary': 'Accept'})
 
 @app.route('/bib/me/<resourceid>.<fmt>')
 def bib_resource_format(resourceid, fmt):
@@ -77,10 +77,10 @@ def bib_collection(collectionid):
     if not res.exists():
         abort(404)
     if wants_rdf(request.headers.get('Accept', '')):
-        return res.graph
-    response = make_response(render_template('resource.html', title=res.name(), res=res))
-    response.headers['Vary'] = 'Accept'
-    return response
+        data = res.graph
+    else:
+        data = render_template('resource.html', title=res.name(), res=res)
+    return (data, 200, {'Vary': 'Accept'})
 
 @app.route('/au/pn/<regex("[0-9]+"):personid>')
 @returns_rdf
@@ -89,10 +89,10 @@ def person_resource(personid):
     if not res.exists():
         abort(404)
     if wants_rdf(request.headers.get('Accept', '')):
-        return res.graph
-    response = make_response(render_template('resource.html', title=res.name(), res=res))
-    response.headers['Vary'] = 'Accept'
-    return response
+        data = res.graph
+    else:
+        data = render_template('resource.html', title=res.name(), res=res)
+    return (data, 200, {'Vary': 'Accept'})
 
 @app.route('/au/pn/<regex("[0-9]+"):personid>.<fmt>')
 def person_resource_format(personid, fmt):
@@ -108,10 +108,10 @@ def organization_resource(organizationid):
     if not res.exists():
         abort(404)
     if wants_rdf(request.headers.get('Accept', '')):
-        return res.graph
-    response = make_response(render_template('resource.html', title=res.name(), res=res))
-    response.headers['Vary'] = 'Accept'
-    return response
+        data = res.graph
+    else:
+        data = render_template('resource.html', title=res.name(), res=res)
+    return (data, 200, {'Vary': 'Accept'})
 
 @app.route('/au/cn/<regex("[0-9]+A"):organizationid>.<fmt>')
 def organization_resource_format(organizationid, fmt):
