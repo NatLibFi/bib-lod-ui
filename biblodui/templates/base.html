@@ -30,9 +30,10 @@
           Open Data and Linked Data Service</a></p>
         </div>
         <div class="col-md-6 search">
-          <label for="query">Search works, persons, organizations and subjects:</label>
-          <form action="/bib/search.html" method="GET">
-            <input type="text" name="query" id="query">
+          <form class="navbar-form" action="/bib/search.html" method="GET" role="search">
+            <label for="query">Search works, persons, organizations and subjects:</label>
+            <input type="text" name="query" id="query" class="form-control">
+            <input type="submit" name="submit" value="Go" id="submit" class="btn btn-default">
           </form>
         </div>
       </div>

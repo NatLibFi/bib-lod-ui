@@ -31,8 +31,8 @@ p, li {
   color: white;
 }
 
-.search input {
-  width: 40em;
+#query {
+  width: 90%;
 }
 
 #footer {
@@ -215,7 +215,7 @@ h3 {
 .autocomplete-group { padding: 2px 5px; }
 .autocomplete-group strong { display: block; border-bottom: 1px solid #000; }
 
-.spin {
+#query.spin {
   background-image: url("/static/img/ajax-loader.gif");
   background-position: 50% 50%;
   background-repeat: no-repeat;
