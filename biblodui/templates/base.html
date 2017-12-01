@@ -4,11 +4,13 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  {% block title %}
   {% if title %}
-  <title>{{ title }} - National Library of Finland</title>
+  <title>{{ title }} - NLF Open Data</title>
   {% else %}
   <title>Linked Data - National Library of Finland</title>
   {% endif %}
+  {% endblock %}
   <!-- Latest compiled and minified CSS -->
   <link rel="shortcut icon" href="/static/img/favicon.ico">
   <link rel="stylesheet" href="/static/css/bootstrap-3.3.7.min.css">

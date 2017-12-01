@@ -110,15 +110,13 @@ h3 {
 }*/
 
 #news {
-  height: 22em;
   text-align: center;
   padding-top: 10em;
-  background-color: #999;
 }
 
 #news p {
   color: black;
-  font-size: 2em;
+  font-size: 1em;
 
 }
 

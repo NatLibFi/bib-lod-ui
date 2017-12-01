@@ -1,20 +1,92 @@
 {% extends "base.html" %}
+{% block title %}
+  <title>National Library of Finland Open Data</title>
+{% endblock %}
+
 {% block content %}
 
-<h2>Collections</h2>
+    <h1 id="nlfod">Open Data Service</h1>
+    <p id="tagline">Access open data sources maintained by the National Library
+    of Finland</p>
 
-<ul>
-{% for coll in collections.list_collections() %}
-  <li><a href="{{ coll['url'] }}">{{ coll['name'] }}</a></li>
-{% endfor %}
-</ul>
+    <h2 id="datacatalog" class="page-header">Data Catalog</h2>
+    <p>Our data catalog showcases the open data sets and APIs of the
+    National Library.</p>
 
-<h2>Concept Schemes</h2>
+    <div class="row">
+      <div class="col-md-4">
+        <a href="https://www.kiwi.fi/display/Datacatalog/Data+sets"><img
+        src="/static/img/datasets.jpg" alt="Data
+        sets" class="img-responsive"></a>
+        <h3><a href="https://www.kiwi.fi/display/Datacatalog/Data+sets">Data sets</a></h3>
+        Open data sets available for reuse.
+      </div>
 
-<ul>
-{% for cs in conceptschemes.list_concept_schemes() %}
-  <li><a href="{{ cs['url'] }}">{{ cs['title'] }}</a></li>
-{% endfor %}
-</ul>
+      <div class="col-md-4">
+        <a href="https://www.kiwi.fi/display/Datacatalog/APIs"><img src="/static/img/apis.jpg" alt="APIs"
+        class="img-responsive"></a>
+        <h3><a href="https://www.kiwi.fi/display/Datacatalog/APIs">APIs</a></h3>
+        Interfaces that provide access to our data.
+      </div>
+
+      <div class="col-md-4" id="news">
+        <p>news feed is coming</p>
+      </div>
+    </div>
+
+    <h2 id="linkeddata" class="page-header">Linked Data</h2>
+    <div class="row">
+
+      <div class="col-md-4">
+        <h3 id="architecture">Linked Bibliographic Data</h3>
+
+        <p>The national bibliography Fennica is available as RDF Linked Open
+        Data.</p>
+
+        <h3>Browse our Linked Data</h3>
+
+        <h4>Collections</h4>
+
+        <ul>
+        {% for coll in collections.list_collections() %}
+          <li><a href="{{ coll['url'] }}">{{ coll['name'] }}</a></li>
+        {% endfor %}
+        </ul>
+
+        <h4>Concept Schemes</h4>
+
+        <ul>
+        {% for cs in conceptschemes.list_concept_schemes() %}
+          <li><a href="{{ cs['url'] }}">{{ cs['title'] }}</a></li>
+        {% endfor %}
+        </ul>
+      </div>
+
+      <div class="col-md-4">
+        <h3>Access</h3>
+        <ul>
+        <li><a href="/bib/sparql">SPARQL endpoint</a></li>
+        <li><a href="/download/">Downloadable data dumps</a></li>
+        </ul>
+
+        <h3>Documentation</h3>
+        <ul>
+        <li><a href="https://www.kiwi.fi/x/-hPHB">Fennica RDF data model
+        documentation</a></li>
+        <li><a href="https://www.kiwi.fi/x/8iovBQ">What is included in Fennica</a>
+        (in Finnish)</li>
+        </ul>
+      </div>
+
+      <div class="col-md-4">
+        <a href="http://finto.fi/"><img src="/static/img/finto.png"
+        alt="Finto" class="img-responsive"></a>
+        <h3><a href="http://finto.fi/">Finto vocabulary service</a></h3>
+        <p>The Finnish thesaurus and ontology service provides access to
+        controlled vocabularies such as thesauri, classifications
+        and ontologies as Linked Data.</p>
+      </div>
+    </div>
+
 
 {% endblock %}
