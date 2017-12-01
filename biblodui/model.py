@@ -378,7 +378,7 @@ class SearchResult:
     
     def typename(self):
         if 'type' in self.binding:
-            return self.binding['type']['value'].split('/')[-1]
+            return self.binding['type']['value'].split('/')[-1].split('#')[-1]
         else:
             return ''
     
@@ -394,7 +394,7 @@ class Search:
     WHERE {
       (?uri ?score ?literal) text:query ('%(query_string)s' 100) .
       ?uri a ?type .
-      VALUES ?type { bf:Work schema:Person schema:Organization }
+      VALUES ?type { bf:Work schema:Person schema:Organization skos:Concept }
       FILTER(isIRI(?uri))
     }
     ORDER BY DESC(?score)
