@@ -48,7 +48,7 @@ p, li {
   height: 5em;
 }
 
-#footer > div > a > img {
+#footer img {
   float: left;
   margin: 1em;
   height: 6em;
@@ -58,7 +58,11 @@ p, li {
   color: white;
   margin-top: 1em;
   font-family: "Open Sans",Helvetica,Arial,sans-serif,Nimbus Sans L;
+}
+
+#topbar p, #topbar p a, #footer p a {
   font-weight: bold;
+  color: white;
 }
 
 #tagline {
