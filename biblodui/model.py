@@ -486,5 +486,5 @@ class ExampleQueries:
         return (query_title, query_id)
 
     def list_example_queries(self):
-        return [self.query_title_and_id(qfn)
-                for qfn in os.listdir(self.query_path)]
+        return sorted([self.query_title_and_id(qfn)
+                      for qfn in os.listdir(self.query_path)])
