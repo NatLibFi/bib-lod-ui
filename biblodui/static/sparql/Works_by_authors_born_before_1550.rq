@@ -1,0 +1,11 @@
+PREFIX schema: <http://schema.org/>
+PREFIX bf: <http://id.loc.gov/ontologies/bibframe/>
+SELECT * WHERE {
+  ?work a schema:CreativeWork, bf:Work .
+  ?work schema:author ?author .
+  ?author schema:name ?authorName .
+  ?work schema:name ?workTitle .
+  ?author schema:birthDate ?birthDate .
+  FILTER(?birthDate < "1550" && ?birthDate > "1000") # the latter condition eliminates some garbage data
+}
+ORDER BY ?workTitle

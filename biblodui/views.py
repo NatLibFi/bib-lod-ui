@@ -153,3 +153,9 @@ def opensearchdescription():
     response = make_response(render_template('opensearchdescription.xml', url_root=request.url_root))
     response.headers['Content-Type'] = 'application/opensearchdescription+xml; charset=utf-8'
     return response
+
+@app.route('/bib/sparql')
+def sparql():
+    example_queries = model.ExampleQueries(app.root_path)
+    return render_template('sparql.html', title='SPARQL query form', example_queries=example_queries)
+

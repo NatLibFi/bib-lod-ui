@@ -46,3 +46,13 @@ $('#query').autocomplete({
     },
     deferRequestBy: 500
 });
+
+function loadQuery (query_id) {
+    $.ajax("/static/sparql/" + query_id + ".rq", {
+        dataType: 'text',
+        success: function (data) {
+            yasgui.current().setQuery(data);
+            yasgui.current().yasqe.query();
+        }
+    });
+}

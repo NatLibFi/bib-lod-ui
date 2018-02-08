@@ -3,6 +3,9 @@ from SPARQLWrapper import SPARQLWrapper, JSON
 from rdflib import Graph, URIRef, Namespace, RDF, RDFS, BNode
 from rdflib.namespace import SKOS, DC
 
+import os
+import os.path
+
 SCHEMA = Namespace('http://schema.org/')
 RDAU = Namespace('http://rdaregistry.info/Elements/u/')
 
@@ -472,3 +475,16 @@ class ConceptSchemes:
                  'title': b['title']['value']}
                 for b in self.bindings]
                  
+
+class ExampleQueries:
+    def __init__(self, root_path):
+        self.query_path = os.path.join(root_path, 'static/sparql')
+
+    def query_title_and_id(self, query_fn):
+        query_id = query_fn.replace('.rq','')
+        query_title = query_id.replace('_',' ')
+        return (query_title, query_id)
+
+    def list_example_queries(self):
+        return [self.query_title_and_id(qfn)
+                for qfn in os.listdir(self.query_path)]

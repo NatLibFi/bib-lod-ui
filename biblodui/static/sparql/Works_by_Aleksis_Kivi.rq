@@ -1,0 +1,10 @@
+PREFIX schema: <http://schema.org/>
+PREFIX bf: <http://id.loc.gov/ontologies/bibframe/>
+SELECT ?work ?workTitle ?lang WHERE {
+  ?work a schema:CreativeWork, bf:Work .
+  ?work schema:author ?author .
+  ?author schema:name "Kivi, Aleksis" .
+  ?work schema:name ?workTitle .
+  OPTIONAL { ?work schema:inLanguage ?lang }
+}
+ORDER BY ?workTitle

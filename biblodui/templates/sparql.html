@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block head %}
+ <link href='/static/css/yasgui-2.7.21.min.css' rel='stylesheet' type='text/css'/>
+ <script src='/static/js/yasgui-2.7.21.min.js'></script>
+{% endblock %}
+
+{% block content %}
+
+    <h1>SPARQL access</h1>
+    
+    <p>This is the SPARQL endpoint of the National Library of Finland Linked
+    Data Service. You can query our linked data sets either using the
+    YASGUI-based form below, or by using this endpoint directly in any
+    program that can perform SPARQL 1.1 queries.</p>
+    
+    <p>The URL for this endpoint is <a
+    href="http://data.nationallibrary.fi/bib/sparql">http://data.nationallibrary.fi/bib/sparql</a>.</p>
+
+    <h2>SPARQL query form</h1>
+    
+    <p>Use the form below to write a query. Some example queries to get you
+    started:</p>
+    
+    <ul>
+      {% for qtitle, qid in example_queries.list_example_queries() %}
+      <li><a href="javascript:loadQuery('{{ qid }}')">{{ qtitle }}</a></li>
+      {% endfor %}
+    </ul>
+
+    <div id='yasgui'></div>
+    <script type="text/javascript">
+	    var yasgui = YASGUI(document.getElementById("yasgui"), {
+        //Uncomment below to change the default endpoint
+        //Note: If you've already opened the YASGUI page before, you should first clear your
+        //local-storage cache before you will see the changes taking effect 
+        yasqe:{sparql:{endpoint:'http://data.nationallibrary.fi/bib/sparql'}}
+      });
+    </script>
+{% endblock %}

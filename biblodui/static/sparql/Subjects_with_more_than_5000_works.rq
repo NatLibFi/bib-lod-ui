@@ -1,0 +1,12 @@
+PREFIX schema: <http://schema.org/>
+PREFIX bf: <http://id.loc.gov/ontologies/bibframe/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+SELECT ?subject ?subjectLabel (COUNT(?work) AS ?works) WHERE {
+  ?work a bf:Work .
+  ?work schema:about ?subject .
+  ?subject skos:prefLabel ?subjectLabel .
+  FILTER(langMatches(LANG(?subjectLabel), 'en'))
+}
+GROUP BY ?subject ?subjectLabel
+HAVING (?works > 5000)
+ORDER BY DESC(?works)

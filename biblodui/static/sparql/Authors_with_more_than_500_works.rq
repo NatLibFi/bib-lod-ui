@@ -1,0 +1,10 @@
+PREFIX schema: <http://schema.org/>
+PREFIX bf: <http://id.loc.gov/ontologies/bibframe/>
+SELECT ?authorName (COUNT(?work) AS ?works) WHERE {
+  ?work a bf:Work .
+  ?work schema:author ?author .
+  ?author schema:name ?authorName .
+}
+GROUP BY ?authorName
+HAVING (?works > 500)
+ORDER BY DESC(?works)
