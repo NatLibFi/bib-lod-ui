@@ -1,0 +1,13 @@
+PREFIX schema: <http://schema.org/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+SELECT ?inst ?instName ?instDate ?publisherName ?lang WHERE {
+  ?inst schema:bookFormat schema:EBook . 
+  ?inst schema:name ?instName .
+  OPTIONAL { ?inst schema:datePublished ?instDate }
+  OPTIONAL { ?inst schema:publisher/schema:name ?publisherName }
+  ?inst schema:exampleOfWork ?work .
+  ?work schema:inLanguage ?lang .
+  ?work schema:about ?subject .
+  ?subject skos:prefLabel "cosmology"@en .
+}
+ORDER BY ?instName

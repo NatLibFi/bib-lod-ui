@@ -1,0 +1,9 @@
+PREFIX schema: <http://schema.org/>
+SELECT ?person ?personName (COUNT(?work) AS ?works) WHERE {
+  ?person a schema:Person .
+  ?person schema:name ?personName .
+  ?work schema:about ?person .
+}
+GROUP BY ?person ?personName
+HAVING (?works > 100)
+ORDER BY DESC(?works)
