@@ -1,0 +1,20 @@
+# Authors of works with the same subjects as works by Esko Valtaoja
+# Inspired by the campaign #vaihtoehtoeskolle (http://vaihtoehtoeskolle.fi)
+
+PREFIX schema: <http://schema.org/>
+SELECT ?altPerson ?altPersonName
+    (SAMPLE(?altWorkName) AS ?sampleWork)
+    (COUNT(DISTINCT ?subject) AS ?matches)
+WHERE {
+  ?esko a schema:Person; schema:name "Valtaoja, Esko" .
+  ?eskoWork schema:author ?esko .
+  ?eskoWork schema:about ?subject .
+  ?altWork schema:about ?subject .
+  ?altWork schema:name ?altWorkName .
+  ?altWork schema:author ?altPerson .
+  ?altPerson schema:name ?altPersonName .
+  FILTER(?altPersonName != "Valtaoja, Esko")
+}
+GROUP BY ?altPerson ?altPersonName
+ORDER BY DESC(?matches)
+LIMIT 50
