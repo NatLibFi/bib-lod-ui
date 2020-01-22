@@ -1,5 +1,5 @@
 from collections import OrderedDict
-from SPARQLWrapper import SPARQLWrapper, JSON
+from SPARQLWrapper import SPARQLWrapper, JSON, TURTLE
 from rdflib import Graph, URIRef, Namespace, RDF, RDFS, BNode
 from rdflib.namespace import SKOS, DC
 
@@ -94,10 +94,11 @@ class Resource:
             self.graph = self.query_for_graph()
     
     def query_for_graph(self):
-        sparql = SPARQLWrapper(ENDPOINT)
+        sparql = SPARQLWrapper(ENDPOINT, returnFormat=TURTLE)
+        sparql.setOnlyConneg(True)
         sparql.setQuery(self.query % {'uri': self.uri, 'prefixes': self.prefixes})
         graph = Graph()
-        graph.parse(sparql.query().response)
+        graph.parse(sparql.query().response, format='turtle')
         return graph
     
     def exists(self):
